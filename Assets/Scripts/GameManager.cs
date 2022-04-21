@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     public float playerHangTime;
     public bool playerHoldingBox;
     public int fuel;
+    public int steam;
     public bool vehicleMoving;
     public int speed;
 
@@ -56,6 +57,11 @@ public class GameManager : MonoBehaviour
     public float tickSpeedTime;
     public int fuelCounter;
     public int fuelRollover;
+    public int steamCounter;
+    public int steamRollover;
+    public int motorSpeed;
+    public int sailSpeed;
+    public bool brakeActive;
 
     AudioSource audioSource;
     public static GameManager instance;
@@ -84,7 +90,7 @@ public class GameManager : MonoBehaviour
         lastTickTime = Time.time;
 
         //Make a box at location 3 & 4 for now
-        lcdGroundBoxes[3].SetActive(true);
+        lcdGroundBoxes[0].SetActive(true);
         lcdGroundBoxes[4].SetActive(true);
 
         //Initialize the vehicle
@@ -115,7 +121,7 @@ public class GameManager : MonoBehaviour
             button1Object.SetActive(false);
         ClearHeldBoxes();
         ClearGroundBoxes();
-        ClearFuelGauge();
+        FuelGauge.instance.ClearFuelGauge();
     }
     void ClearPlayers()
     {
@@ -132,17 +138,14 @@ public class GameManager : MonoBehaviour
         foreach (GameObject groundBoxObject in lcdGroundBoxes)
             groundBoxObject.SetActive(false);
     }
-    void ClearFuelGauge()
-    {
-        foreach (GameObject fuelGaugeObject in lcdFuelGauge)
-            fuelGaugeObject.SetActive(false);
-    }
     void InitializeLcdObjects()
     {
         lcdPlayers[0].SetActive(true);
         SetButton1State(1);
         SetButton2(false);
-        SetFuelGauge();
+        FuelGauge.instance.SetFuelGauge(fuel);
+        Elevator.instance.SetElevatorState(0);
+        SteamGauge.instance.SetSteamState(steam);
         TurnSmallWheel();
     }
 
@@ -152,6 +155,10 @@ public class GameManager : MonoBehaviour
             currentPlayerState.MoveLeft(this);
         if (Input.GetKeyDown(KeyCode.RightArrow))
             currentPlayerState.MoveRight(this);
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+            currentPlayerState.MoveUp(this);
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+            currentPlayerState.MoveDown(this);
         if (Input.GetKeyDown(KeyCode.Z))
             currentPlayerState.Grab(this);
         if (Input.GetKeyDown(KeyCode.Space))
@@ -191,7 +198,7 @@ public class GameManager : MonoBehaviour
                 lcdButton1[3].SetActive(false);
                 lcdButton1[4].SetActive(false);
                 //Set the speed to 0. Later add it to wind;
-                speed = 0;
+                motorSpeed = 0;
                 break;
             case 2:
                 //Button partially pushed
@@ -201,9 +208,9 @@ public class GameManager : MonoBehaviour
                 lcdButton1[3].SetActive(true);
                 lcdButton1[4].SetActive(false);
                 //Set the time to stay in this state
-                button1StateTime = 4;
+                button1StateTime = 6;
                 //Set the Speed. Later this will combine with wind/sail
-                speed = 2;
+                motorSpeed = 1;
                 break;
             case 3:
                 //Button fully pushed
@@ -215,12 +222,30 @@ public class GameManager : MonoBehaviour
                 //Set the time to stay in this state
                 button1StateTime = 10;
                 //Set the Speed. Later this will combine with wind/sail
-                speed = 4;
+                motorSpeed = 2;
                 break;
             default:
                 Debug.LogError("Invalid state sent to Button1");
                 break;
         }
+        UpdateSpeed();
+    }
+
+    public void LetOffSteam()
+    {
+        motorSpeed += steam;
+        steam = 0;
+        SteamGauge.instance.SetSteamState(steam);
+        UpdateSpeed();
+    }
+
+    void UpdateSpeed()
+    {
+        //Combine motor and sail speed, check for brake, then update relevant lcds
+        speed = motorSpeed + sailSpeed;
+        if (brakeActive) speed = 0;
+        Speedometer.instance.UpdateSpeedometer(speed);
+        FrontFlap.instance.UpdateFrontFlap(speed);
     }
 
     void UpdateButton1()
@@ -298,61 +323,12 @@ public class GameManager : MonoBehaviour
                 SetButton2(false);
         }
     }
-    public void SetFuelGauge()
-    {
-        lcdFuelGauge[0].SetActive(false);
-        lcdFuelGauge[1].SetActive(false);
-        lcdFuelGauge[2].SetActive(false);
-        lcdFuelGauge[3].SetActive(false);
-        lcdFuelGauge[4].SetActive(false);
-        lcdFuelGauge[5].SetActive(false);
-        switch (fuel)
-        {
-            case 0:
-                break;
-            case 1:
-                lcdFuelGauge[0].SetActive(true);
-                break;
-            case 2:
-                lcdFuelGauge[0].SetActive(true);
-                lcdFuelGauge[1].SetActive(true);
-                break;
-            case 3:
-                lcdFuelGauge[0].SetActive(true);
-                lcdFuelGauge[1].SetActive(true);
-                lcdFuelGauge[2].SetActive(true);
-                break;
-            case 4:
-                lcdFuelGauge[0].SetActive(true);
-                lcdFuelGauge[1].SetActive(true);
-                lcdFuelGauge[2].SetActive(true);
-                lcdFuelGauge[3].SetActive(true);
-                break;
-            case 5:
-                lcdFuelGauge[0].SetActive(true);
-                lcdFuelGauge[1].SetActive(true);
-                lcdFuelGauge[2].SetActive(true);
-                lcdFuelGauge[3].SetActive(true);
-                lcdFuelGauge[4].SetActive(true);
-                break;
-            case 6:
-                lcdFuelGauge[0].SetActive(true);
-                lcdFuelGauge[1].SetActive(true);
-                lcdFuelGauge[2].SetActive(true);
-                lcdFuelGauge[3].SetActive(true);
-                lcdFuelGauge[4].SetActive(true);
-                lcdFuelGauge[5].SetActive(true);
-                break;
-            default:
-                Debug.LogError("Incorrect fuel amount");
-                break;
-        }
-    }
+    
     void AddFuel(int amount)
     {
         if (fuel < 6)
             fuel += amount;
-        SetFuelGauge();
+        FuelGauge.instance.SetFuelGauge(fuel);
     }
     public void PickUpBox(int state, bool pickup)
     {
@@ -410,13 +386,34 @@ public class GameManager : MonoBehaviour
     }
     void ConsumeFuel()
     {
+        //Consume fuel
         if (fuelCounter > fuelRollover)
         {
             fuel--;
-            SetFuelGauge();
+            FuelGauge.instance.SetFuelGauge(fuel);
             fuelCounter = 0;
+            if (fuel == 0)
+                SetButton1State(1);
         }
         else
             fuelCounter++;
+        //Make Steam
+        if (steamCounter > steamRollover)
+        {
+            steam++;
+            if (steam > 4)
+            {
+                Debug.Log("Explode");
+                SetButton1State(1);
+            }
+            else
+            {
+                SteamGauge.instance.SetSteamState(steam);
+                steamCounter = 0;
+            }
+        }
+        else
+            steamCounter++;
+
     }
 }
