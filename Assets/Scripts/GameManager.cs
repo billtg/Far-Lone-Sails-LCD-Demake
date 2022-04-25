@@ -28,14 +28,44 @@ public class GameManager : MonoBehaviour
     public PlayerState8 ps8 = new PlayerState8();
     public PlayerState9 ps9 = new PlayerState9();
     public PlayerState10 ps10 = new PlayerState10();
+    public PlayerState11 ps11 = new PlayerState11();
+    public PlayerState12 ps12 = new PlayerState12();
+    public PlayerState13 ps13 = new PlayerState13();
+    public PlayerState14 ps14 = new PlayerState14();
+    public PlayerState15 ps15 = new PlayerState15();
+    public PlayerState16 ps16 = new PlayerState16();
+    public PlayerState17 ps17 = new PlayerState17();
+    public PlayerState18 ps18 = new PlayerState18();
+    public PlayerState19 ps19 = new PlayerState19();
+    public PlayerState20 ps20 = new PlayerState20();
+    public PlayerState21 ps21 = new PlayerState21();
+    public PlayerState22 ps22 = new PlayerState22();
+    public PlayerState23 ps23 = new PlayerState23();
+    public PlayerState24 ps24 = new PlayerState24();
+    public PlayerState25 ps25 = new PlayerState25();
+    public PlayerState26 ps26 = new PlayerState26();
+    public PlayerState27 ps27 = new PlayerState27();
+    public PlayerState28 ps28 = new PlayerState28();
+    public PlayerState29 ps29 = new PlayerState29();
+    public PlayerState30 ps30 = new PlayerState30();
+    public PlayerState31 ps31 = new PlayerState31();
+    public PlayerState32 ps32 = new PlayerState32();
+    public PlayerState33 ps33 = new PlayerState33();
+    public PlayerState34 ps34 = new PlayerState34();
+    public PlayerState35 ps35 = new PlayerState35();
 
     //Gameplay values
+    bool gameOver;
     public float playerHangTime;
     public bool playerHoldingBox;
     public int fuel;
-    public int steam;
     public bool vehicleMoving;
     public int speed;
+    public int odometerAmount;
+
+    //Box Spawning
+    public int spawnBoxIndex;
+    public int spawnBoxChance;
 
     //Button1 value
     public int button1State;
@@ -57,13 +87,28 @@ public class GameManager : MonoBehaviour
     public float tickSpeedTime;
     public int fuelCounter;
     public int fuelRollover;
+    public int motorSpeed;
+
+    //Steam
+    public int steam;
+    public bool steamActive;
     public int steamCounter;
     public int steamRollover;
-    public int motorSpeed;
-    public int sailSpeed;
+    public int steamPower;
+    public float steamPowerDelay;
+    public float steamPowerAdded;
+
+    //Brake
     public bool brakeActive;
 
+    //sails
+    public int sailSpeed;
+    public int wind;
+    public bool sailsUp;
+
+
     AudioSource audioSource;
+    public AudioSource gameOverAudio;
     public static GameManager instance;
 
     private void Awake()
@@ -92,14 +137,19 @@ public class GameManager : MonoBehaviour
         //Make a box at location 3 & 4 for now
         lcdGroundBoxes[0].SetActive(true);
         lcdGroundBoxes[4].SetActive(true);
+        lcdGroundBoxes[29].SetActive(true);
 
         //Initialize the vehicle
         fuelCounter = 0;
+        steamCounter = 0;
+        odometerAmount = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (gameOver) return;
+
         //Check for control input [Left,Right,Jump,Grab]
         CheckForInput();
         //Run PlayerUpdate
@@ -107,6 +157,9 @@ public class GameManager : MonoBehaviour
         //Update Buttons
         UpdateButton1();
         UpdateButton2();
+
+        //Update the steam
+        UpdateSteam();
 
         //Move the vehicle
         MoveVehicle();
@@ -122,6 +175,8 @@ public class GameManager : MonoBehaviour
         ClearHeldBoxes();
         ClearGroundBoxes();
         FuelGauge.instance.ClearFuelGauge();
+        Flag.instance.ClearFlag();
+        Sails.instance.ClearSails();
     }
     void ClearPlayers()
     {
@@ -147,6 +202,9 @@ public class GameManager : MonoBehaviour
         Elevator.instance.SetElevatorState(0);
         SteamGauge.instance.SetSteamState(steam);
         TurnSmallWheel();
+        Brake.instance.Button4Pushed(false);
+        Flag.instance.SetFlagState(wind);
+        Sails.instance.SetSails(0);
     }
 
     void CheckForInput()
@@ -184,7 +242,10 @@ public class GameManager : MonoBehaviour
     
     public void SetButton1State(int state)
     {
-        button1State = state;
+        if (fuel == 0)
+            button1State = 1;
+        else
+            button1State = state;
         button1StateChangedTime = Time.time;
         switch (state)
         {
@@ -233,8 +294,29 @@ public class GameManager : MonoBehaviour
 
     public void LetOffSteam()
     {
-        motorSpeed += steam;
-        steam = 0;
+        if (motorSpeed == 0)
+        {
+            steam = 0;
+            steamPower = 0;
+            //Vent steam animation
+        }
+        else
+        {
+            //Only add to increase
+            if (steamPower < steam)
+            {
+                steamActive = true;
+                steamPowerAdded = Time.time;
+                if (steam == 2 || steam == 3)
+                    steamPower = 1;
+                if (steam == 4)
+                    steamPower = 2;
+                steam = 0;
+            }
+            else
+                steam = 0;
+        }
+        steamCounter = 0;
         SteamGauge.instance.SetSteamState(steam);
         UpdateSpeed();
     }
@@ -242,8 +324,14 @@ public class GameManager : MonoBehaviour
     void UpdateSpeed()
     {
         //Combine motor and sail speed, check for brake, then update relevant lcds
-        speed = motorSpeed + sailSpeed;
+        //Steampower is only added when the motor is running.
+        if (motorSpeed > 0)
+            speed = motorSpeed + steamPower + sailSpeed;
+        else
+            speed = sailSpeed;
+        //Negate speed when the brake is on
         if (brakeActive) speed = 0;
+        //Update the speedometer and the flap
         Speedometer.instance.UpdateSpeedometer(speed);
         FrontFlap.instance.UpdateFrontFlap(speed);
     }
@@ -371,22 +459,85 @@ public class GameManager : MonoBehaviour
     {
         if (speed == 0)
             return;
-        else if (fuel > 0)
+        else
         {
             tickSpeedTime = tickBaseTime/speed;
             if (Time.time - lastTickTime > tickSpeedTime)
             {
                 //Debug.Log("Ticking");
                 TurnSmallWheel();
-                ConsumeFuel();
                 lastTickTime = Time.time;
                 audioSource.Play();
+                //If the motor is contributing, consume fuel
+                if (motorSpeed > 0)
+                    ConsumeFuel();
+                MoveGroundItems();
+                SpawnBoxes();
+                odometerAmount++;
+                if (odometerAmount == 10000)
+                    Debug.Log("WINN");
+                else
+                    Odometer.instance.UpdateOdometer(odometerAmount);
             }
         }
     }
+
+    void MoveGroundItems()
+    {
+        //Check for Game Over
+        if (currentPlayerState.GameOver())
+            GameOver();
+        //Move the Player
+        if (currentPlayerState.IsOnGround())
+            currentPlayerState.MoveLeft(this);
+        //Move the boxes. It's gonna be a mess
+        //First, clear 17, then move 15,16, 18, then undercar, then aheadcar
+        if (lcdGroundBoxes[17].activeSelf)
+            lcdGroundBoxes[17].SetActive(false);
+        if (lcdGroundBoxes[16].activeSelf)
+        {
+            lcdGroundBoxes[17].SetActive(true);
+            lcdGroundBoxes[16].SetActive(false);
+        }
+        if (lcdGroundBoxes[15].activeSelf)
+        {
+            lcdGroundBoxes[16].SetActive(true);
+            lcdGroundBoxes[15].SetActive(false);
+        }
+        if (lcdGroundBoxes[18].activeSelf)
+        {
+            lcdGroundBoxes[15].SetActive(true);
+            lcdGroundBoxes[18].SetActive(false);
+        }
+
+        //Undercar
+        for (int i = 19; i <= 23; i++)
+        {
+            if (lcdGroundBoxes[i].activeSelf)
+            {
+                lcdGroundBoxes[i-1].SetActive(true);
+                lcdGroundBoxes[i].SetActive(false);
+            }
+        }
+        //Aheadcar
+        if (lcdGroundBoxes[27].activeSelf)
+        {
+            lcdGroundBoxes[23].SetActive(true);
+            lcdGroundBoxes[27].SetActive(false);
+        }
+        for (int i = 28; i <= 29; i++)
+        {
+            if (lcdGroundBoxes[i].activeSelf)
+            {
+                lcdGroundBoxes[i-1].SetActive(true);
+                lcdGroundBoxes[i].SetActive(false);
+            }
+        }
+
+    }
     void ConsumeFuel()
     {
-        //Consume fuel
+        //Consume fuel. Update the fuel gauge when rollover point is reached.
         if (fuelCounter > fuelRollover)
         {
             fuel--;
@@ -402,18 +553,81 @@ public class GameManager : MonoBehaviour
         {
             steam++;
             if (steam > 4)
-            {
-                Debug.Log("Explode");
-                SetButton1State(1);
-            }
+                SteamExplosion();
             else
             {
                 SteamGauge.instance.SetSteamState(steam);
                 steamCounter = 0;
             }
         }
-        else
+        else if (!steamActive)
             steamCounter++;
 
+    }
+
+    void SteamExplosion()
+    {
+        //Steam got too high.
+        //Vent all the steam. Damage the motor. 
+        steam = 0;
+        steamPower = 0;
+        SteamGauge.instance.SetSteamState(steam);
+        SetButton1State(1);
+        //Add Damage.
+    }
+
+    void UpdateSteam()
+    {
+        if (!steamActive) return;
+        if (Time.time - steamPowerAdded > steamPowerDelay)
+        {
+            steamPower = 0;
+            steamActive = false;
+            UpdateSpeed();
+        }
+    }
+
+    public void SetBrake(bool brakeOn)
+    {
+        if (brakeOn)
+        {
+            brakeActive = true;
+            SetButton1State(1);
+        }
+        else
+            brakeActive = false;
+        UpdateSpeed();
+    }
+
+    void SpawnBoxes()
+    {
+        int spawnRoll = (int)Random.Range(0, 10);
+        if (spawnRoll < spawnBoxChance)
+        {
+            Debug.Log("Spawning Box");
+            lcdGroundBoxes[spawnBoxIndex].SetActive(true);
+        }    
+    }
+    void GameOver()
+    {
+        gameOver = true;
+        gameOverAudio.Play();
+    }
+
+    public void ChangeSail()
+    {
+        sailsUp = !sailsUp;
+        if (sailsUp)
+        {
+            Sails.instance.SetSails(2);
+            sailSpeed = wind;
+            UpdateSpeed();
+        }
+        else
+        {
+            Sails.instance.SetSails(0);
+            sailSpeed = 0;
+            UpdateSpeed();
+        }
     }
 }

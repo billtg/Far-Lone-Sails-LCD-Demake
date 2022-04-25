@@ -11,16 +11,13 @@ public class PlayerState4 : PlayerBaseState
     }
     public override void MoveLeft(GameManager gm)
     {
+        gm.ChangePlayerState(gm.ps13);
     }
     public override void MoveRight(GameManager gm)
     {
         gm.ChangePlayerState(gm.ps0);
     }
-    public override void Jump(GameManager gm)
-    {
-        //Debug.Log("Jumping");
-        //gm.ChangePlayerState(gm.ps5);
-    }
+
     public override void Grab(GameManager gm)
     {
         if (gm.playerHoldingBox)
@@ -35,11 +32,5 @@ public class PlayerState4 : PlayerBaseState
             if (gm.lcdGroundBoxes[thisState].activeSelf)
                 gm.PickUpBox(thisState, true);
         }
-    }
-    public override void Fall(GameManager gm)
-    {
-    }
-    public override void PlayerUpdate(GameManager gm)
-    {
     }
 }

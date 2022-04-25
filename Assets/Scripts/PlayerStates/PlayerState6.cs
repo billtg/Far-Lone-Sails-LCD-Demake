@@ -11,8 +11,6 @@ public class PlayerState6 : PlayerBaseState
     public override void EnterState(GameManager gm)
     {
         gm.UpdatePlayerSprite(thisState);
-        gm.pushingButton1 = true;
-        startedPushing = Time.time;
     }
     public override void MoveLeft(GameManager gm)
     {
@@ -22,28 +20,33 @@ public class PlayerState6 : PlayerBaseState
     }
     public override void MoveRight(GameManager gm)
     {
-        Debug.Log("Won't Work");
+        //Debug.Log("Won't Work");
         //Debug.Log("Moving Right");
         //gm.ChangePlayerState(gm.ps0);
     }
     public override void Jump(GameManager gm)
     {
-        //Debug.Log("Jumping");
-        //gm.ChangePlayerState(gm.ps5);
-    }
-    public override void Grab(GameManager gm)
-    {
-    }
-    public override void Fall(GameManager gm)
-    {
+        //Debug.Log("Won't Work");
+        //Debug.Log("Moving Up");
+        gm.ChangePlayerState(gm.ps12);
     }
 
     public override void PlayerUpdate(GameManager gm)
     {
+        if (gm.button1State == 3 || gm.fuel == 0)
+            return;
         //Push Button1 in if it's not already pushed in
         if (Input.GetKey(KeyCode.RightArrow))
         {
             //Debug.Log("Pushing");
+            if (!gm.pushingButton1)
+            {
+                Debug.Log("Started pushing button");
+                gm.pushingButton1 = true;
+                startedPushing = Time.time;
+                if (gm.brakeActive)
+                    Brake.instance.Button4Pushed(false);
+            }
             if (Time.time - startedPushing > buttonTime)
             {
                 Debug.Log("Button Pushed");
@@ -51,7 +54,7 @@ public class PlayerState6 : PlayerBaseState
                 if (gm.button1State == 3)
                 {
                     //Button fully pushed. Time to let go.
-                    MoveLeft(GameManager.instance);
+                    //MoveLeft(GameManager.instance);
                 }
                 else
                 {
@@ -61,6 +64,8 @@ public class PlayerState6 : PlayerBaseState
             }
         }
         else
-            MoveLeft(GameManager.instance);
+        {
+            gm.pushingButton1 = false;
+        }
     }
 }

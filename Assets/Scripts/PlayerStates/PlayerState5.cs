@@ -12,16 +12,12 @@ public class PlayerState5 : PlayerBaseState
     }
     public override void MoveLeft(GameManager gm)
     {
-        Debug.Log("Moving Left!");
+        //Debug.Log("Moving Left!");
         gm.ChangePlayerState(gm.ps1);
     }
     public override void MoveRight(GameManager gm)
     {
-        if (gm.button1State != 3)
-        {
-            Debug.Log("Pushing");
-            gm.ChangePlayerState(gm.ps6);
-        }
+        gm.ChangePlayerState(gm.ps6);
     }
     public override void Jump(GameManager gm)
     {

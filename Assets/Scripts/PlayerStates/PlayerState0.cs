@@ -15,6 +15,7 @@ public class PlayerState0 : PlayerBaseState
     }
     public override void MoveRight(GameManager gm)
     {
+        gm.ChangePlayerState(gm.ps24);
     }
 
     public override void MoveUp(GameManager gm)
