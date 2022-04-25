@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerState8 : PlayerBaseState
+public class PlayerState36 : PlayerBaseState
 {
-    int thisState = 8;
+    int thisState = 36;
     public override void EnterState(GameManager gm)
     {
         gm.UpdatePlayerSprite(thisState);
@@ -13,27 +13,34 @@ public class PlayerState8 : PlayerBaseState
     }
     public override void MoveLeft(GameManager gm)
     {
-        if (!gm.playerHoldingNozzle)
-            gm.ChangePlayerState(gm.ps9);
     }
     public override void MoveRight(GameManager gm)
     {
+        Debug.Log("Moving Right");
         Exit(gm);
-        gm.ChangePlayerState(gm.ps7);
+        gm.ChangePlayerState(gm.ps2);
     }
     public override void Jump(GameManager gm)
     {
         //Debug.Log("Won't Work");
-        if (!gm.button2Pushed && !gm.playerHoldingNozzle)
+        if (!gm.playerHoldingBox)
         {
             Debug.Log("Jumping");
-            gm.ChangePlayerState(gm.ps10);
+            Exit(gm);
+            gm.ChangePlayerState(gm.ps37);
         }
+    }
+    void Exit(GameManager gm)
+    {
+        if (gm.playerHoldingNozzle)
+            FireHose.instance.activateLCDs(thisState, false);
     }
     public override void Grab(GameManager gm)
     {
         if (gm.playerHoldingNozzle)
+        {
             gm.DropNozzle();
+        }
         else
         {
             if (gm.playerHoldingBox)
@@ -49,10 +56,5 @@ public class PlayerState8 : PlayerBaseState
                     gm.PickUpBox(thisState, true);
             }
         }
-    }
-    void Exit(GameManager gm)
-    {
-        if (gm.playerHoldingNozzle)
-            FireHose.instance.activateLCDs(thisState, false);
     }
 }

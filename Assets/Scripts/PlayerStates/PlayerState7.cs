@@ -5,41 +5,45 @@ using UnityEngine;
 public class PlayerState7 : PlayerBaseState
 {
     int thisState = 7;
-
-    float enteredStateTime;
     public override void EnterState(GameManager gm)
     {
         gm.UpdatePlayerSprite(thisState);
-        enteredStateTime = Time.time;
+        if (gm.playerHoldingNozzle)
+            FireHose.instance.activateLCDs(thisState, true);
     }
     public override void MoveLeft(GameManager gm)
     {
-        Debug.Log("Moving Left");
+        Exit(gm);
         gm.ChangePlayerState(gm.ps8);
     }
     public override void MoveRight(GameManager gm)
     {
+        Exit(gm);
         gm.ChangePlayerState(gm.ps1);
-    }
-    public override void Jump(GameManager gm)
-    {
-        Debug.Log("Won't Work");
-        //Debug.Log("Jumping");
-        //gm.ChangePlayerState(gm.ps1);
     }
     public override void Grab(GameManager gm)
     {
-        if (gm.playerHoldingBox)
-        {
-            //Drop box if a space is available
-            if (!gm.lcdGroundBoxes[thisState].activeSelf)
-                gm.PickUpBox(thisState, false);
-        }
+        if (gm.playerHoldingNozzle)
+            gm.DropNozzle();
         else
         {
-            //pick up a box if there's one here
-            if (gm.lcdGroundBoxes[thisState].activeSelf)
-                gm.PickUpBox(thisState, true);
+            if (gm.playerHoldingBox)
+            {
+                //Drop box if a space is available
+                if (!gm.lcdGroundBoxes[thisState].activeSelf)
+                    gm.PickUpBox(thisState, false);
+            }
+            else
+            {
+                //pick up a box if there's one here
+                if (gm.lcdGroundBoxes[thisState].activeSelf)
+                    gm.PickUpBox(thisState, true);
+            }
         }
+    }
+    void Exit(GameManager gm)
+    {
+        if (gm.playerHoldingNozzle)
+            FireHose.instance.activateLCDs(thisState, false);
     }
 }

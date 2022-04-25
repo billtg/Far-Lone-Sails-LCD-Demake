@@ -9,15 +9,18 @@ public class PlayerState5 : PlayerBaseState
     public override void EnterState(GameManager gm)
     {
         gm.UpdatePlayerSprite(thisState);
+        if (gm.playerHoldingNozzle)
+            FireHose.instance.activateLCDs(thisState, true);
     }
     public override void MoveLeft(GameManager gm)
     {
-        //Debug.Log("Moving Left!");
+        Exit(gm);
         gm.ChangePlayerState(gm.ps1);
     }
     public override void MoveRight(GameManager gm)
     {
-        gm.ChangePlayerState(gm.ps6);
+        if (!gm.playerHoldingNozzle)
+            gm.ChangePlayerState(gm.ps6);
     }
     public override void Jump(GameManager gm)
     {
@@ -26,26 +29,27 @@ public class PlayerState5 : PlayerBaseState
     }
     public override void Grab(GameManager gm)
     {
-        if (gm.playerHoldingBox)
-        {
-            //Drop box if a space is available
-            if (!gm.lcdGroundBoxes[thisState].activeSelf)
-                gm.PickUpBox(thisState, false);
-        }
+        if (gm.playerHoldingNozzle)
+            gm.DropNozzle();
         else
         {
-            //pick up a box if there's one here
-            if (gm.lcdGroundBoxes[thisState].activeSelf)
-                gm.PickUpBox(thisState, true);
+            if (gm.playerHoldingBox)
+            {
+                //Drop box if a space is available
+                if (!gm.lcdGroundBoxes[thisState].activeSelf)
+                    gm.PickUpBox(thisState, false);
+            }
+            else
+            {
+                //pick up a box if there's one here
+                if (gm.lcdGroundBoxes[thisState].activeSelf)
+                    gm.PickUpBox(thisState, true);
+            }
         }
     }
-
-    public override void Fall(GameManager gm)
+    void Exit(GameManager gm)
     {
-        //Debug.Log("Falling");
-        //gm.ChangePlayerState(gm.ps4);
-    }
-    public override void PlayerUpdate(GameManager gm)
-    {
+        if (gm.playerHoldingNozzle)
+            FireHose.instance.activateLCDs(thisState, false);
     }
 }

@@ -8,28 +8,42 @@ public class PlayerState30 : PlayerBaseState
     public override void EnterState(GameManager gm)
     {
         gm.UpdatePlayerSprite(thisState);
+        if (gm.playerHoldingNozzle)
+            FireHose.instance.activateLCDs(thisState, true);
     }
     public override void MoveLeft(GameManager gm)
     {
+        Exit(gm);
         gm.ChangePlayerState(gm.ps3);
     }
     public override void MoveRight(GameManager gm)
     {
-        gm.ChangePlayerState(gm.ps31);
+        if (!gm.playerHoldingNozzle)
+            gm.ChangePlayerState(gm.ps31);
     }
     public override void Grab(GameManager gm)
     {
-        if (gm.playerHoldingBox)
-        {
-            //Drop box if a space is available
-            if (!gm.lcdGroundBoxes[thisState].activeSelf)
-                gm.PickUpBox(thisState, false);
-        }
+        if (gm.playerHoldingNozzle)
+            gm.DropNozzle();
         else
         {
-            //pick up a box if there's one here
-            if (gm.lcdGroundBoxes[thisState].activeSelf)
-                gm.PickUpBox(thisState, true);
+            if (gm.playerHoldingBox)
+            {
+                //Drop box if a space is available
+                if (!gm.lcdGroundBoxes[thisState].activeSelf)
+                    gm.PickUpBox(thisState, false);
+            }
+            else
+            {
+                //pick up a box if there's one here
+                if (gm.lcdGroundBoxes[thisState].activeSelf)
+                    gm.PickUpBox(thisState, true);
+            }
         }
+    }
+    void Exit(GameManager gm)
+    {
+        if (gm.playerHoldingNozzle)
+            FireHose.instance.activateLCDs(thisState, false);
     }
 }

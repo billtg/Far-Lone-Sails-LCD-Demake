@@ -1,16 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public List<GameObject> lcdPlayers;
+    public List<GameObject> lcdGroundBoxes;
+    public List<GameObject> lcdHeldBoxes;
     public List<GameObject> lcdGrounds;
     public List<GameObject> lcdButton1;
     public List<GameObject> lcdButton2;
     public List<GameObject> lcdLifts;
-    public List<GameObject> lcdGroundBoxes;
-    public List<GameObject> lcdHeldBoxes;
     public List<GameObject> lcdFuelGauge;
     public List<GameObject> lcdsmallWheel;
     //public List<GameObject> lcdInteractables;
@@ -53,11 +54,15 @@ public class GameManager : MonoBehaviour
     public PlayerState33 ps33 = new PlayerState33();
     public PlayerState34 ps34 = new PlayerState34();
     public PlayerState35 ps35 = new PlayerState35();
+    public PlayerState36 ps36 = new PlayerState36();
+    public PlayerState37 ps37 = new PlayerState37();
 
     //Gameplay values
     bool gameOver;
+    public float gameOverDelay = 3;
     public float playerHangTime;
     public bool playerHoldingBox;
+    public bool playerHoldingNozzle;
     public int fuel;
     public bool vehicleMoving;
     public int speed;
@@ -177,6 +182,7 @@ public class GameManager : MonoBehaviour
         FuelGauge.instance.ClearFuelGauge();
         Flag.instance.ClearFlag();
         Sails.instance.ClearSails();
+        FireHose.instance.ClearFireHoses();
     }
     void ClearPlayers()
     {
@@ -205,6 +211,7 @@ public class GameManager : MonoBehaviour
         Brake.instance.Button4Pushed(false);
         Flag.instance.SetFlagState(wind);
         Sails.instance.SetSails(0);
+        FireHose.instance.InitializeFireHose();
     }
 
     void CheckForInput()
@@ -221,6 +228,8 @@ public class GameManager : MonoBehaviour
             currentPlayerState.Grab(this);
         if (Input.GetKeyDown(KeyCode.Space))
             currentPlayerState.Jump(this);
+        if (Input.GetKeyDown(KeyCode.R))
+            SceneManager.LoadScene(0);
     }
 
     public void ChangePlayerState(PlayerBaseState state)
@@ -612,6 +621,15 @@ public class GameManager : MonoBehaviour
     {
         gameOver = true;
         gameOverAudio.Play();
+
+        //Restart after a delay
+        StartCoroutine(DelayedRestart());
+    }
+
+    IEnumerator DelayedRestart()
+    {
+        yield return new WaitForSeconds(gameOverDelay);
+        SceneManager.LoadScene(0);
     }
 
     public void ChangeSail()
@@ -629,5 +647,17 @@ public class GameManager : MonoBehaviour
             sailSpeed = 0;
             UpdateSpeed();
         }
+    }
+
+    public void PickUpNozzle()
+    {
+        FireHose.instance.PickupNozzle();
+        playerHoldingNozzle = true;
+    }
+
+    public void DropNozzle()
+    {
+        FireHose.instance.DropNozzle();
+        playerHoldingNozzle = false;
     }
 }
