@@ -110,6 +110,8 @@ public class GameManager : MonoBehaviour
     public int sailSpeed;
     public int wind;
     public bool sailsUp;
+    float windSetTime;
+    public float windChangeTime;
 
 
     AudioSource audioSource;
@@ -148,6 +150,9 @@ public class GameManager : MonoBehaviour
         fuelCounter = 0;
         steamCounter = 0;
         odometerAmount = 0;
+
+        //Set the wind set time
+        windSetTime = Time.time;
     }
 
     // Update is called once per frame
@@ -168,6 +173,9 @@ public class GameManager : MonoBehaviour
 
         //Move the vehicle
         MoveVehicle();
+
+        //Check for wind changes
+        UpdateWind();
     }
 
     void ClearScreen()
@@ -183,6 +191,7 @@ public class GameManager : MonoBehaviour
         Flag.instance.ClearFlag();
         Sails.instance.ClearSails();
         FireHose.instance.ClearFireHoses();
+        Health.instance.ClearHealthLCDs();
     }
     void ClearPlayers()
     {
@@ -212,6 +221,7 @@ public class GameManager : MonoBehaviour
         Flag.instance.SetFlagState(wind);
         Sails.instance.SetSails(0);
         FireHose.instance.InitializeFireHose();
+        Health.instance.UpdateHealthBarLCD();
     }
 
     void CheckForInput()
@@ -388,7 +398,10 @@ public class GameManager : MonoBehaviour
             lcdButton2[2].SetActive(true);
             lcdLifts[0].SetActive(false);
             lcdLifts[1].SetActive(true);
+
+            //Record the time
             button2PushedTime = Time.time;
+
             //Add Fuel
             if (lcdGroundBoxes[9].activeSelf)
             {
@@ -401,6 +414,7 @@ public class GameManager : MonoBehaviour
         {
             //Button2 extended
             button2Pushed = false;
+
             //Update LCDs
             lcdButton2[0].SetActive(true);
             lcdButton2[1].SetActive(true);
@@ -412,11 +426,13 @@ public class GameManager : MonoBehaviour
     }
     void UpdateButton2()
     {
+        //Unpush the button after a time delay
         if (!button2Pushed)
             return;
         else
         {
-            if (Time.time - button2PushedTime > button2Delay)
+            //See if time has elapsed. Delay is scaled according to health;
+            if (Time.time - button2PushedTime > button2Delay*Health.instance.fuelDelayFactor)
                 SetButton2(false);
         }
     }
@@ -577,12 +593,15 @@ public class GameManager : MonoBehaviour
     void SteamExplosion()
     {
         //Steam got too high.
+        Debug.Log("Steam Explosion");
         //Vent all the steam. Damage the motor. 
         steam = 0;
         steamPower = 0;
         SteamGauge.instance.SetSteamState(steam);
         SetButton1State(1);
         //Add Damage.
+        Health.instance.TakeDamage(HealthBar.fuel);
+        //Set the fuel thing on fire
     }
 
     void UpdateSteam()
@@ -646,6 +665,20 @@ public class GameManager : MonoBehaviour
             Sails.instance.SetSails(0);
             sailSpeed = 0;
             UpdateSpeed();
+        }
+    }
+
+    void UpdateWind()
+    {
+        if (Time.time - windSetTime > windChangeTime)
+        {
+            Debug.Log("Changing wind");
+            wind = Random.Range(0, 3);
+            Flag.instance.SetFlagState(wind);
+            if (sailsUp)
+                sailSpeed = wind;
+            UpdateSpeed();
+            windSetTime = Time.time;
         }
     }
 

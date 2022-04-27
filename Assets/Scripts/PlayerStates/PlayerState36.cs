@@ -11,9 +11,6 @@ public class PlayerState36 : PlayerBaseState
         if (gm.playerHoldingNozzle)
             FireHose.instance.activateLCDs(thisState, true);
     }
-    public override void MoveLeft(GameManager gm)
-    {
-    }
     public override void MoveRight(GameManager gm)
     {
         Debug.Log("Moving Right");

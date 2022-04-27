@@ -23,8 +23,7 @@ public class PlayerState8 : PlayerBaseState
     }
     public override void Jump(GameManager gm)
     {
-        //Debug.Log("Won't Work");
-        if (!gm.button2Pushed && !gm.playerHoldingNozzle)
+        if (!gm.button2Pushed && !gm.playerHoldingNozzle && Health.instance.fuelHealth > 0)
         {
             Debug.Log("Jumping");
             gm.ChangePlayerState(gm.ps10);

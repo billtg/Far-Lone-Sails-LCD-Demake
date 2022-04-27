@@ -39,6 +39,7 @@ public class FireHose : MonoBehaviour
         //Turn on the lcds.
         parkedNozzle.SetActive(false);
         lcdHeldNozzles[37].SetActive(true);
+        lcdHoses[4].SetActive(true);
     }
 
     public void DropNozzle()
@@ -50,34 +51,54 @@ public class FireHose : MonoBehaviour
 
     public void activateLCDs (int state, bool lcdsOn)
     {
+        ClearFireHoses();
+        hoseRoll.SetActive(true);
         switch (state)
         {
             case 1:
                 lcdHeldNozzles[state].SetActive(lcdsOn);
+                lcdHoses[0].SetActive(true);
+                lcdHoses[1].SetActive(true);
+                lcdHoses[2].SetActive(true);
                 break;
             case 2:
                 lcdHeldNozzles[state].SetActive(lcdsOn);
+                lcdHoses[4].SetActive(true);
+                lcdHoses[3].SetActive(true);
                 break;
             case 3:
                 lcdHeldNozzles[state].SetActive(lcdsOn);
+                lcdHoses[11].SetActive(true);
                 break;
             case 5:
                 lcdHeldNozzles[state].SetActive(lcdsOn);
+                lcdHoses[4].SetActive(true);
+                lcdHoses[5].SetActive(true);
+                lcdHoses[6].SetActive(true);
                 break;
             case 7:
                 lcdHeldNozzles[state].SetActive(lcdsOn);
+                lcdHoses[7].SetActive(true);
+                lcdHoses[8].SetActive(true);
                 break;
             case 8:
                 lcdHeldNozzles[state].SetActive(lcdsOn);
+                lcdHoses[9].SetActive(true);
+                lcdHoses[10].SetActive(true);
                 break;
             case 30:
                 lcdHeldNozzles[state].SetActive(lcdsOn);
+                lcdHoses[11].SetActive(true);
+                lcdHoses[12].SetActive(true);
                 break;
             case 36:
                 lcdHeldNozzles[state].SetActive(lcdsOn);
+                lcdHoses[4].SetActive(true);
+                lcdHoses[5].SetActive(true);
                 break;
             case 37:
                 lcdHeldNozzles[state].SetActive(lcdsOn);
+                lcdHoses[4].SetActive(true);
                 break;
             default:
                 Debug.LogError("Invalid state sent to FireHose: " + state.ToString());
