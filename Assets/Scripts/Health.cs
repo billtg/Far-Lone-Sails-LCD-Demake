@@ -13,6 +13,7 @@ public class Health : MonoBehaviour
     public List<GameObject> lcdSailHealth;
     public List<GameObject> lcdMotorHealth;
     public List<GameObject> lcdFuelHealth;
+    public List<GameObject> lcdSymbols;
 
     public float fuelDelayFactor =1;
 
@@ -28,6 +29,8 @@ public class Health : MonoBehaviour
         foreach (GameObject healthObject in lcdMotorHealth)
             healthObject.SetActive(false);
         foreach (GameObject healthObject in lcdFuelHealth)
+            healthObject.SetActive(false);
+        foreach (GameObject healthObject in lcdSymbols)
             healthObject.SetActive(false);
     }
 
@@ -73,7 +76,11 @@ public class Health : MonoBehaviour
 
     public void UpdateHealthBarLCD()
     {
+        //Clear everything, then initialize the symbols and the relevant health bars
         ClearHealthLCDs();
+        foreach (GameObject healthObject in lcdSymbols)
+            healthObject.SetActive(true);
+
         //Set the sail health bar
         if (sailHealth != 0)
             SetSpecificHealthBar(sailHealth, lcdSailHealth);

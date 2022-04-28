@@ -594,14 +594,18 @@ public class GameManager : MonoBehaviour
     {
         //Steam got too high.
         Debug.Log("Steam Explosion");
+
         //Vent all the steam. Damage the motor. 
         steam = 0;
         steamPower = 0;
         SteamGauge.instance.SetSteamState(steam);
         SetButton1State(1);
+
         //Add Damage.
         Health.instance.TakeDamage(HealthBar.fuel);
+
         //Set the fuel thing on fire
+        Fire.instance.CatchFire(HealthBar.fuel);
     }
 
     void UpdateSteam()
