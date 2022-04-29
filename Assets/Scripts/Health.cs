@@ -16,6 +16,7 @@ public class Health : MonoBehaviour
     public List<GameObject> lcdSymbols;
 
     public float fuelDelayFactor =1;
+    public float sailDelayFactor = 1;
 
     private void Awake()
     {
@@ -42,6 +43,11 @@ public class Health : MonoBehaviour
         {
             case HealthBar.sails:
                 sailHealth = value;
+                //Drop the sail if you're out of sail health
+                if (sailHealth == 0 && GameManager.instance.sailsUp)
+                    GameManager.instance.ChangeSail();
+                if (sailHealth > 0)
+                    sailDelayFactor = 3 / sailHealth;
                 break;
             case HealthBar.motor:
                 motorHealth = value;
@@ -49,7 +55,7 @@ public class Health : MonoBehaviour
             case HealthBar.fuel:
                 fuelHealth = value;
                 if (fuelHealth > 0)
-                    fuelDelayFactor = 3 / value;
+                    fuelDelayFactor = 3 / fuelHealth;
                 break;
         }
         UpdateHealthBarLCD();

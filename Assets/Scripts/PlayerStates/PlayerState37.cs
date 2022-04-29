@@ -12,7 +12,7 @@ public class PlayerState37 : PlayerBaseState
         gm.UpdatePlayerSprite(thisState);
         enteredStateTime = Time.time;
         if (gm.playerHoldingNozzle)
-            FireHose.instance.activateLCDs(thisState, true);
+            FireHose.instance.ActivateHoseLCDs(thisState, true);
     }
     public override void Grab(GameManager gm)
     {
@@ -35,7 +35,7 @@ public class PlayerState37 : PlayerBaseState
     void Exit(GameManager gm)
     {
         if (gm.playerHoldingNozzle)
-            FireHose.instance.activateLCDs(thisState, false);
+            FireHose.instance.ActivateHoseLCDs(thisState, false);
     }
     public override void PlayerUpdate(GameManager gm)
     {

@@ -33,7 +33,7 @@ public class PlayerState31 : PlayerBaseState
 
     public override void PlayerUpdate(GameManager gm)
     {
-        //Push Button1 in if it's not already pushed in
+        //Push Button5 in
         if (Input.GetKey(KeyCode.RightArrow))
         {
             //Start the timer if you're just starting to push it
@@ -42,18 +42,26 @@ public class PlayerState31 : PlayerBaseState
                 Debug.Log("Started pushing button 5");
                 pushingButton5 = true;
                 startedPushing = Time.time;
+                if (!gm.sailsUp && Health.instance.sailHealth > 0)
+                    Sails.instance.SetSails(1);
             }
-            if (Time.time - startedPushing > buttonTime)
+            if (Time.time - startedPushing > buttonTime*Health.instance.sailDelayFactor && Health.instance.sailHealth > 0)
             {
                 Debug.Log("Button 5 Pushed");
                 gm.ChangeSail();
                 pushingButton5 = false;
+                if (!gm.sailsUp)
+                    Sails.instance.SetSails(0);
             }
         }
         else
         {
             if (pushingButton5)
+            {
                 pushingButton5 = false;
+                if (!gm.sailsUp)
+                    Sails.instance.SetSails(0);
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ public class PlayerState36 : PlayerBaseState
     {
         gm.UpdatePlayerSprite(thisState);
         if (gm.playerHoldingNozzle)
-            FireHose.instance.activateLCDs(thisState, true);
+            FireHose.instance.ActivateHoseLCDs(thisState, true);
     }
     public override void MoveRight(GameManager gm)
     {
@@ -30,7 +30,7 @@ public class PlayerState36 : PlayerBaseState
     void Exit(GameManager gm)
     {
         if (gm.playerHoldingNozzle)
-            FireHose.instance.activateLCDs(thisState, false);
+            FireHose.instance.ActivateHoseLCDs(thisState, false);
     }
     public override void Grab(GameManager gm)
     {

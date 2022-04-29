@@ -33,11 +33,16 @@ public class PlayerState6 : PlayerBaseState
 
     public override void PlayerUpdate(GameManager gm)
     {
-        if (gm.button1State == 3 || gm.fuel == 0)
+        if (gm.button1State == 3)
             return;
         //Push Button1 in if it's not already pushed in
         if (Input.GetKey(KeyCode.RightArrow))
         {
+            //Release the brake
+            if (gm.brakeActive)
+                Brake.instance.Button4Pushed(false);
+            if (gm.fuel == 0)
+                return;
             //Debug.Log("Pushing");
             if (!gm.pushingButton1)
             {

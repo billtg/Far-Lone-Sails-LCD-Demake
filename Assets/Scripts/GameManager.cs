@@ -181,8 +181,6 @@ public class GameManager : MonoBehaviour
     void ClearScreen()
     {
         ClearPlayers();
-        //foreach (GameObject groundObject in grounds)
-        //groundObject.SetActive(false);
         foreach (GameObject button1Object in lcdButton1)
             button1Object.SetActive(false);
         ClearHeldBoxes();
@@ -191,7 +189,9 @@ public class GameManager : MonoBehaviour
         Flag.instance.ClearFlag();
         Sails.instance.ClearSails();
         FireHose.instance.ClearFireHoses();
+        FireHose.instance.ClearWaterLCDs();
         Health.instance.ClearHealthLCDs();
+        Fire.instance.ClearFireLCDs();
     }
     void ClearPlayers()
     {
