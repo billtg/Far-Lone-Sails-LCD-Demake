@@ -12245,7 +12245,7 @@ MonoBehaviour:
   fireDamageDelay: 6
   fuelOnFire: 0
   motorOnFire: 0
-  sailsOnFire: 1
+  sailsOnFire: 0
 --- !u!1 &1220353115
 GameObject:
   m_ObjectHideFlags: 0
@@ -18587,6 +18587,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1825753772}
   - component: {fileID: 1825753771}
+  - component: {fileID: 1825753773}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -18604,7 +18605,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 2ed480e538c1f3540b26f6d357052fbe, type: 3}
+  m_audioClip: {fileID: 8300000, guid: c97ccda6b7b10024d9d55e8843173c94, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -18704,6 +18705,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1825753773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825753770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2429f38c21b2ec44b8a6b0bc5306d710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSource: {fileID: 0}
+  playerMove: {fileID: 8300000, guid: c97ccda6b7b10024d9d55e8843173c94, type: 3}
+  vehicleTick: {fileID: 8300000, guid: 88488f6d6069b064a86b1a0e4f92c0f2, type: 3}
+  pickupBox: {fileID: 8300000, guid: 3462827e1c338e04485b3e56fe51ff5e, type: 3}
+  dropBox: {fileID: 8300000, guid: c97ccda6b7b10024d9d55e8843173c94, type: 3}
+  sailsUp: {fileID: 8300000, guid: 706701c5881e32642a04143e38bad849, type: 3}
+  fireAlarm: {fileID: 8300000, guid: ab1fed0f0da22ae4eb45a78acf6411fa, type: 3}
 --- !u!1 &1830678660
 GameObject:
   m_ObjectHideFlags: 0

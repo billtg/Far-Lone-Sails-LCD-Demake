@@ -246,6 +246,8 @@ public class GameManager : MonoBehaviour
     {
         currentPlayerState = state;
         currentPlayerState.EnterState(this);
+        //Play the player move audio
+        AudioManager.instance.PlayerMove();
     }
 
     public void UpdatePlayerSprite(int spriteIndex)
@@ -451,6 +453,7 @@ public class GameManager : MonoBehaviour
             playerHoldingBox = true;
             lcdHeldBoxes[state].SetActive(true);
             lcdGroundBoxes[state].SetActive(false);
+            AudioManager.instance.PickupBox();
         }
         else
         {
@@ -458,6 +461,7 @@ public class GameManager : MonoBehaviour
             playerHoldingBox = false;
             lcdHeldBoxes[state].SetActive(false);
             lcdGroundBoxes[state].SetActive(true);
+            AudioManager.instance.DropBox();
         }
     }
 
@@ -492,7 +496,7 @@ public class GameManager : MonoBehaviour
                 //Debug.Log("Ticking");
                 TurnSmallWheel();
                 lastTickTime = Time.time;
-                audioSource.Play();
+                AudioManager.instance.VehicleTick();
                 //If the motor is contributing, consume fuel
                 if (motorSpeed > 0)
                     ConsumeFuel();
@@ -606,6 +610,9 @@ public class GameManager : MonoBehaviour
 
         //Set the fuel thing on fire
         Fire.instance.CatchFire(HealthBar.fuel);
+
+        //Play the fire alarm
+        AudioManager.instance.FireAlarm();
     }
 
     void UpdateSteam()
@@ -670,6 +677,7 @@ public class GameManager : MonoBehaviour
             sailSpeed = 0;
             UpdateSpeed();
         }
+        AudioManager.instance.SailsUp();
     }
 
     void UpdateWind()
