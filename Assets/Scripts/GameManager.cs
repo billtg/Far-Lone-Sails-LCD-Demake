@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
     public PlayerState35 ps35 = new PlayerState35();
     public PlayerState36 ps36 = new PlayerState36();
     public PlayerState37 ps37 = new PlayerState37();
+    public PlayerState38 ps38 = new PlayerState38();
 
     //Gameplay values
     bool gameOver;
@@ -63,6 +64,7 @@ public class GameManager : MonoBehaviour
     public float playerHangTime;
     public bool playerHoldingBox;
     public bool playerHoldingNozzle;
+    public bool playerHoldingWelder;
     public int fuel;
     public bool vehicleMoving;
     public int speed;
@@ -190,6 +192,7 @@ public class GameManager : MonoBehaviour
         Sails.instance.ClearSails();
         FireHose.instance.ClearFireHoses();
         FireHose.instance.ClearWaterLCDs();
+        FireHose.instance.ClearWeldingLCDs();
         Health.instance.ClearHealthLCDs();
         Fire.instance.ClearFireLCDs();
     }
@@ -594,6 +597,17 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void DrainFuel()
+    {
+        if (fuel > 0)
+        {
+            fuel--;
+            FuelGauge.instance.SetFuelGauge(fuel);
+            if (fuel == 0)
+                SetButton1State(1);
+        }
+    }
+
     void SteamExplosion()
     {
         //Steam got too high.
@@ -704,5 +718,17 @@ public class GameManager : MonoBehaviour
     {
         FireHose.instance.DropNozzle();
         playerHoldingNozzle = false;
+    }
+
+    public void PickUpWelder()
+    {
+        FireHose.instance.PickupWelder();
+        playerHoldingWelder = true;
+    }
+
+    public void DropWelder()
+    {
+        FireHose.instance.DropWelder();
+        playerHoldingWelder = false;
     }
 }

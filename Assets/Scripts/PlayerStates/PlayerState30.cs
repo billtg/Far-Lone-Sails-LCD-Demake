@@ -8,10 +8,15 @@ public class PlayerState30 : PlayerBaseState
     public override void EnterState(GameManager gm)
     {
         gm.UpdatePlayerSprite(thisState);
-        if (gm.playerHoldingNozzle)
+        //activate hose sprite
+        if (gm.playerHoldingNozzle || gm.playerHoldingWelder)
             FireHose.instance.ActivateHoseLCDs(thisState, true);
+        //Activate firehose
         if (gm.playerHoldingNozzle && Fire.instance.sailsOnFire)
             FireHose.instance.StartHosing(HealthBar.sails);
+        //activate welder
+        if (gm.playerHoldingWelder && Health.instance.sailHealth < 3)
+            FireHose.instance.StartWelding(HealthBar.sails);
     }
     public override void MoveLeft(GameManager gm)
     {
@@ -20,13 +25,15 @@ public class PlayerState30 : PlayerBaseState
     }
     public override void MoveRight(GameManager gm)
     {
-        if (!gm.playerHoldingNozzle)
+        if (!gm.playerHoldingNozzle && !gm.playerHoldingWelder)
             gm.ChangePlayerState(gm.ps31);
     }
     public override void Grab(GameManager gm)
     {
         if (gm.playerHoldingNozzle)
             gm.DropNozzle();
+        else if (gm.playerHoldingWelder)
+            gm.DropWelder();
         else
         {
             if (gm.playerHoldingBox)
@@ -45,8 +52,9 @@ public class PlayerState30 : PlayerBaseState
     }
     void Exit(GameManager gm)
     {
-        if (gm.playerHoldingNozzle)
+        if (gm.playerHoldingNozzle || gm.playerHoldingWelder)
             FireHose.instance.ActivateHoseLCDs(thisState, false);
         FireHose.instance.StopHosing();
+        FireHose.instance.StopWelding();
     }
 }

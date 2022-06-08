@@ -8,7 +8,7 @@ public class PlayerState1 : PlayerBaseState
     public override void EnterState(GameManager gm)
     {
         gm.UpdatePlayerSprite(thisState);
-        if (gm.playerHoldingNozzle)
+        if (gm.playerHoldingNozzle || gm.playerHoldingWelder)
             FireHose.instance.ActivateHoseLCDs(thisState, true);
     }
     public override void MoveLeft(GameManager gm)
@@ -29,7 +29,7 @@ public class PlayerState1 : PlayerBaseState
     }
     public override void MoveDown(GameManager gm)
     {
-        if (!gm.playerHoldingNozzle)
+        if (!gm.playerHoldingNozzle && !gm.playerHoldingWelder)
         {
             Elevator.instance.SetElevatorState(0);
             gm.ChangePlayerState(gm.ps0);
@@ -40,6 +40,8 @@ public class PlayerState1 : PlayerBaseState
     {
         if (gm.playerHoldingNozzle)
             gm.DropNozzle();
+        else if (gm.playerHoldingWelder)
+            gm.DropWelder();
         else
         {
             if (gm.playerHoldingBox)
@@ -58,7 +60,7 @@ public class PlayerState1 : PlayerBaseState
     }
     void Exit(GameManager gm)
     {
-        if (gm.playerHoldingNozzle)
+        if (gm.playerHoldingNozzle || gm.playerHoldingWelder)
             FireHose.instance.ActivateHoseLCDs(thisState, false);
     }
 }

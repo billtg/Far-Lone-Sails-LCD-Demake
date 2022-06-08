@@ -80,6 +80,25 @@ public class Health : MonoBehaviour
         }
     }
 
+    public void RemoveDamage(HealthBar healthBar)
+    {
+        switch (healthBar)
+        {
+            case HealthBar.sails:
+                if (sailHealth < 3)
+                    UpdateHealth(HealthBar.sails, sailHealth + 1);
+                break;
+            case HealthBar.motor:
+                if (motorHealth < 3)
+                    UpdateHealth(HealthBar.motor, motorHealth + 1);
+                break;
+            case HealthBar.fuel:
+                if (fuelHealth < 3)
+                    UpdateHealth(HealthBar.fuel, fuelHealth + 1);
+                break;
+        }
+    }
+
     public void UpdateHealthBarLCD()
     {
         //Clear everything, then initialize the symbols and the relevant health bars

@@ -8,14 +8,19 @@ public class PlayerState8 : PlayerBaseState
     public override void EnterState(GameManager gm)
     {
         gm.UpdatePlayerSprite(thisState);
-        if (gm.playerHoldingNozzle)
+        //Activate hose sprites
+        if (gm.playerHoldingNozzle || gm.playerHoldingWelder)
             FireHose.instance.ActivateHoseLCDs(thisState, true);
+        //Activate Firehose
         if (gm.playerHoldingNozzle && Fire.instance.fuelOnFire)
             FireHose.instance.StartHosing(HealthBar.fuel);
+        //Activate welding
+        if (gm.playerHoldingWelder && Health.instance.fuelHealth < 3)
+            FireHose.instance.StartWelding(HealthBar.fuel);
     }
     public override void MoveLeft(GameManager gm)
     {
-        if (!gm.playerHoldingNozzle)
+        if (!gm.playerHoldingNozzle && !gm.playerHoldingWelder)
             gm.ChangePlayerState(gm.ps9);
     }
     public override void MoveRight(GameManager gm)
@@ -25,9 +30,8 @@ public class PlayerState8 : PlayerBaseState
     }
     public override void Jump(GameManager gm)
     {
-        if (!gm.button2Pushed && !gm.playerHoldingNozzle && Health.instance.fuelHealth > 0)
+        if (!gm.button2Pushed && !gm.playerHoldingNozzle && !gm.playerHoldingWelder && Health.instance.fuelHealth > 0)
         {
-            Debug.Log("Jumping");
             gm.ChangePlayerState(gm.ps10);
         }
     }
@@ -35,6 +39,8 @@ public class PlayerState8 : PlayerBaseState
     {
         if (gm.playerHoldingNozzle)
             gm.DropNozzle();
+        else if (gm.playerHoldingWelder)
+            gm.DropWelder();
         else
         {
             if (gm.playerHoldingBox)
@@ -53,8 +59,9 @@ public class PlayerState8 : PlayerBaseState
     }
     void Exit(GameManager gm)
     {
-        if (gm.playerHoldingNozzle)
+        if (gm.playerHoldingNozzle || gm.playerHoldingWelder)
             FireHose.instance.ActivateHoseLCDs(thisState, false);
         FireHose.instance.StopHosing();
+        FireHose.instance.StopWelding();
     }
 }
