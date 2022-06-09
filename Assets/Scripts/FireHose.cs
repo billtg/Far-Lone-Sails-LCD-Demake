@@ -13,6 +13,8 @@ public class FireHose : MonoBehaviour
 
     public List<GameObject> lcdFuelWater;
     public List<GameObject> lcdSailsWater;
+    public List<GameObject> lcdMotorWater;
+
     public List<GameObject> lcdWeldingArcs;
 
     public GameObject hoseRoll;
@@ -226,6 +228,14 @@ public class FireHose : MonoBehaviour
                         AnimateWater(lcdFuelWater);
                     break;
                 case HealthBar.motor:
+                    if (Time.time - timeStartedHosing > timeToDouse)
+                    {
+                        Debug.Log("Motor fire is out");
+                        Fire.instance.DouseFire(HealthBar.motor);
+                        StopHosing();
+                    }
+                    else
+                        AnimateWater(lcdMotorWater);
                     break;
                 case HealthBar.sails:
                     if (Time.time - timeStartedHosing > timeToDouse)
@@ -243,7 +253,7 @@ public class FireHose : MonoBehaviour
         //Weld
         if (welding)
         {
-            DrainFuel();
+            //DrainFuel();
             switch (weldTarget)
             {
                 case HealthBar.fuel:
@@ -260,6 +270,17 @@ public class FireHose : MonoBehaviour
                         AnimateWelding(lcdWeldingArcs[0]);
                     break;
                 case HealthBar.motor:
+                    if (Time.time - timeStartedWelding > timeToWeld)
+                    {
+                        Debug.Log("Motor health increased");
+                        Health.instance.RemoveDamage(HealthBar.motor);
+                        if (Health.instance.motorHealth == 3)
+                            StopWelding();
+                        else
+                            timeStartedWelding = Time.time;
+                    }
+                    else
+                        AnimateWelding(lcdWeldingArcs[2]);
                     break;
                 case HealthBar.sails:
                     if (Time.time - timeStartedWelding > timeToWeld)
@@ -318,6 +339,8 @@ public class FireHose : MonoBehaviour
         foreach (GameObject waterObject in lcdFuelWater)
             waterObject.SetActive(false);
         foreach (GameObject waterObject in lcdSailsWater)
+            waterObject.SetActive(false);
+        foreach (GameObject waterObject in lcdMotorWater)
             waterObject.SetActive(false);
     }
 

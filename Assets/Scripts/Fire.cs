@@ -95,6 +95,11 @@ public class Fire : MonoBehaviour
             AnimateFire(lcdSailsFire);
             CheckForFireDamage(HealthBar.sails);
         }
+        if (motorOnFire)
+        {
+            AnimateFire(lcdMotorFire);
+            CheckForFireDamage(HealthBar.motor);
+        }
     }
 
     void CheckForFireDamage(HealthBar damageCheck)
