@@ -43,6 +43,7 @@ public class PlayerState6 : PlayerBaseState
                 Brake.instance.Button4Pushed(false);
             if (gm.fuel == 0)
                 return;
+
             //Debug.Log("Pushing");
             if (!gm.pushingButton1)
             {
@@ -54,6 +55,12 @@ public class PlayerState6 : PlayerBaseState
             }
             if (Time.time - startedPushing > buttonTime)
             {
+                //Check for blocking gate
+                if (gm.gateBlocking)
+                {
+                    gm.HitGate();
+                    return;
+                }
                 Debug.Log("Button Pushed");
                 gm.SetButton1State(gm.button1State + 1);
                 if (gm.button1State == 3)

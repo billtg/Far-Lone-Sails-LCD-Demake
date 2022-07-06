@@ -57,6 +57,12 @@ public class GameManager : MonoBehaviour
     public PlayerState36 ps36 = new PlayerState36();
     public PlayerState37 ps37 = new PlayerState37();
     public PlayerState38 ps38 = new PlayerState38();
+    public PlayerState39 ps39 = new PlayerState39();
+    public PlayerState40 ps40 = new PlayerState40();
+    public PlayerState41 ps41 = new PlayerState41();
+    public PlayerState42 ps42 = new PlayerState42();
+    public PlayerState43 ps43 = new PlayerState43();
+    public PlayerState44 ps44 = new PlayerState44();
 
     //Gameplay values
     bool gameOver;
@@ -69,6 +75,7 @@ public class GameManager : MonoBehaviour
     public bool vehicleMoving;
     public int speed;
     public int odometerAmount;
+    public bool gateBlocking;
 
     //Box Spawning
     public int spawnBoxIndex;
@@ -195,6 +202,7 @@ public class GameManager : MonoBehaviour
         FireHose.instance.ClearWeldingLCDs();
         Health.instance.ClearHealthLCDs();
         Fire.instance.ClearFireLCDs();
+        Gate.instance.ClearGate();
     }
     void ClearPlayers()
     {
@@ -353,8 +361,8 @@ public class GameManager : MonoBehaviour
             speed = motorSpeed + steamPower + sailSpeed;
         else
             speed = sailSpeed;
-        //Negate speed when the brake is on
-        if (brakeActive) speed = 0;
+        //Negate speed when the brake is on, or gate blocking
+        if (brakeActive || gateBlocking) speed = 0;
         //Update the speedometer and the flap
         Speedometer.instance.UpdateSpeedometer(speed);
         FrontFlap.instance.UpdateFrontFlap(speed);
@@ -510,6 +518,12 @@ public class GameManager : MonoBehaviour
                     Debug.Log("WINN");
                 else
                     Odometer.instance.UpdateOdometer(odometerAmount);
+
+                //Spawn a gate. Currently happens at 20 at 100 m.
+                if (odometerAmount == Gate.instance.ticksToGate || odometerAmount == 100)
+                    Gate.instance.SpawnGate();
+                if (Gate.instance.gateSpawned)
+                    Gate.instance.MoveGate();
             }
         }
     }
@@ -730,5 +744,30 @@ public class GameManager : MonoBehaviour
     {
         FireHose.instance.DropWelder();
         playerHoldingWelder = false;
+    }
+
+    public void HitGate()
+    {
+        Debug.Log("Hit the gate");
+        //Stop all movement
+        SetButton1State(1);
+        gateBlocking = true;
+        UpdateSpeed();
+
+        //Catch the button on fire
+        Fire.instance.CatchFire(HealthBar.motor);
+    }
+
+    public void GateOpen()
+    {
+        gateBlocking = false;
+        UpdateSpeed();
+    }
+
+    public void HitSails()
+    {
+        //Drop the sail, set them on fire
+        ChangeSail();
+        Fire.instance.CatchFire(HealthBar.sails);
     }
 }

@@ -13,8 +13,11 @@ public class PlayerState35 : PlayerBaseState
     {
         gm.ChangePlayerState(gm.ps34);
     }
-    public override void MoveRight(GameManager gm)
+    public override void Jump(GameManager gm)
     {
+        //Only jump if the ladder is down
+        if (Gate.instance.ladderDown)
+            gm.ChangePlayerState(gm.ps39);
     }
     public override void Grab(GameManager gm)
     {

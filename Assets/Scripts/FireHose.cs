@@ -100,6 +100,7 @@ public class FireHose : MonoBehaviour
         Debug.Log("Dropped welder");
         //Clear hose lcds, clear heldnozzle, turn on parkednozzle;
         InitializeFireHose();
+        StopWelding();
     }
 
     public void ActivateHoseLCDs (int state, bool lcdsOn)
@@ -193,8 +194,6 @@ public class FireHose : MonoBehaviour
 
     public void StartWelding(HealthBar weldTarget)
     {
-        if (GameManager.instance.fuel == 0)
-            return;
         welding = true;
         timeStartedWelding = Time.time;
         lastFuelDrain = Time.time;
