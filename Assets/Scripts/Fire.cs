@@ -11,7 +11,10 @@ public class Fire : MonoBehaviour
     public List<GameObject> lcdSailsFire;
 
     public float fireAnimationDelay;
-    float fireAnimationTimeSet;
+    float fuelFireAnimationTimeSet;
+    float motorFireAnimationTimeSet;
+    float sailsFireAnimationTimeSet;
+
     public float fireDamageDelay;
     float timeSinceDamageFuel;
     float timeSinceDamageMotor;
@@ -24,7 +27,9 @@ public class Fire : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        fireAnimationTimeSet = Time.time;
+        fuelFireAnimationTimeSet = Time.time;
+        motorFireAnimationTimeSet = Time.time;
+        sailsFireAnimationTimeSet = Time.time;
     }
 
     public void ClearFireLCDs()
@@ -87,17 +92,17 @@ public class Fire : MonoBehaviour
         //Animate the fire and check for damage
         if (fuelOnFire)
         {
-            AnimateFire(lcdFuelFire);
+            AnimateFire(HealthBar.fuel);
             CheckForFireDamage(HealthBar.fuel);
         }
         if (sailsOnFire)
         {
-            AnimateFire(lcdSailsFire);
+            AnimateFire(HealthBar.sails);
             CheckForFireDamage(HealthBar.sails);
         }
         if (motorOnFire)
         {
-            AnimateFire(lcdMotorFire);
+            AnimateFire(HealthBar.motor);
             CheckForFireDamage(HealthBar.motor);
         }
     }
@@ -130,14 +135,35 @@ public class Fire : MonoBehaviour
         }
     }
 
-    void AnimateFire(List<GameObject> fireLCDs)
+    void AnimateFire(HealthBar animateFire)
     {
-        //After a time delay, randomly set each of the lcds in the fire, then reset the timer
-        if (Time.time - fireAnimationTimeSet > fireAnimationDelay)
+        //activate the Fire LCDs randomly after random 0 to 2 second interval
+        switch(animateFire)
         {
-            for (int i = 0; i < fireLCDs.Count; i++)
-                fireLCDs[i].SetActive(Random.Range(0, 2) == 0);
-            fireAnimationTimeSet = Time.time;
+            case HealthBar.fuel:
+                if (Time.time - fuelFireAnimationTimeSet > fireAnimationDelay)
+                {
+                    for (int i = 0; i < lcdFuelFire.Count; i++)
+                        lcdFuelFire[i].SetActive(Random.Range(0, 2) == 0);
+                    fuelFireAnimationTimeSet = Time.time;
+                }
+                break;
+            case HealthBar.motor:
+                if (Time.time - motorFireAnimationTimeSet > fireAnimationDelay)
+                {
+                    for (int i = 0; i < lcdFuelFire.Count; i++)
+                        lcdMotorFire[i].SetActive(Random.Range(0, 2) == 0);
+                    motorFireAnimationTimeSet = Time.time;
+                }
+                break;
+            case HealthBar.sails:
+                if (Time.time - sailsFireAnimationTimeSet > fireAnimationDelay)
+                {
+                    for (int i = 0; i < lcdFuelFire.Count; i++)
+                        lcdSailsFire[i].SetActive(Random.Range(0, 2) == 0);
+                    sailsFireAnimationTimeSet = Time.time;
+                }
+                break;
         }
     }
 }

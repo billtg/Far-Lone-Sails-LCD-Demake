@@ -764,6 +764,18 @@ public class GameManager : MonoBehaviour
         UpdateSpeed();
     }
 
+    public void GateMovesWithPlayer()
+    {
+        if (currentPlayerState == ps40 || 
+            currentPlayerState == ps41 || 
+            currentPlayerState == ps42 || 
+            currentPlayerState == ps43 ||
+            currentPlayerState == ps44)
+        {
+            ChangePlayerState(ps39);
+        }
+    }
+
     public void HitSails()
     {
         //Drop the sail, set them on fire

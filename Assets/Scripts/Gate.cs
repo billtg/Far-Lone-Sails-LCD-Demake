@@ -47,6 +47,7 @@ public class Gate : MonoBehaviour
     float timeSinceDoorClosed;
     public float fuelGaugeLoadingDelay;
     public float doorOpenDelay;
+    public float doorRollDelay;
 
     private void Awake()
     {
@@ -155,11 +156,14 @@ public class Gate : MonoBehaviour
                 break;
             case 4:
                 //Gate leaving
+                //Update LCDs
                 ClearGate();
                 lcdLeavingGate.SetActive(true);
                 //Hit the sails if they're up
                 if (GameManager.instance.sailsUp)
                     GameManager.instance.HitSails();
+                //Check for player on the frame
+                GameManager.instance.GateMovesWithPlayer();
                 break;
             default:
                 Debug.LogError("Invalid state for gateState: " + gateState.ToString());
@@ -237,9 +241,13 @@ public class Gate : MonoBehaviour
         fuelLoaded = false;
         //Start animating the door opening
         StartCoroutine(AnimateDoorOpening());
+        //Start animating the door roll
+        StartCoroutine(AnimateDoorRoll());
         //Break the ladder
         lcdLadder1.SetActive(false);
         ladderDown = false;
+        //Allow player movement
+        gateOpen = true;
     }
 
     private void Update()
@@ -316,7 +324,15 @@ public class Gate : MonoBehaviour
             yield return new WaitForSeconds(doorOpenDelay);
         }
         yield return new WaitForSeconds(2);
-        gateOpen = true;
         GameManager.instance.GateOpen();
+    }
+    
+    IEnumerator AnimateDoorRoll()
+    {
+        for (int i = 0; i < lcdDoorRoll.Count; i++)
+        {
+            lcdDoorRoll[i].SetActive(true);
+            yield return new WaitForSeconds(doorRollDelay);
+        }
     }
 }

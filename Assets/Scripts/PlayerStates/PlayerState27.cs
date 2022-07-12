@@ -18,7 +18,10 @@ public class PlayerState27 : PlayerBaseState
     }
     public override void MoveRight(GameManager gm)
     {
-        gm.ChangePlayerState(gm.ps28);
+        if (Gate.instance.gateState == 3 && !Gate.instance.gateOpen)
+            return;
+        else
+            gm.ChangePlayerState(gm.ps28);
     }
     public override void Grab(GameManager gm)
     {
