@@ -15,19 +15,10 @@ public class PlayerState31 : PlayerBaseState
     }
     public override void MoveLeft(GameManager gm)
     {
-        Debug.Log("Moving Left");
         gm.ChangePlayerState(gm.ps30);
-    }
-    public override void MoveRight(GameManager gm)
-    {
-        //Debug.Log("Won't Work");
-        //Debug.Log("Moving Right");
-        //gm.ChangePlayerState(gm.ps0);
     }
     public override void Jump(GameManager gm)
     {
-        //Debug.Log("Won't Work");
-        //Debug.Log("Moving Up");
         gm.ChangePlayerState(gm.ps32);
     }
 

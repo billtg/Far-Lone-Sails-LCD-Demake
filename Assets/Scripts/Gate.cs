@@ -246,8 +246,6 @@ public class Gate : MonoBehaviour
         //Break the ladder
         lcdLadder1.SetActive(false);
         ladderDown = false;
-        //Allow player movement
-        gateOpen = true;
     }
 
     private void Update()
@@ -324,6 +322,7 @@ public class Gate : MonoBehaviour
             yield return new WaitForSeconds(doorOpenDelay);
         }
         yield return new WaitForSeconds(2);
+        gateOpen = true;
         GameManager.instance.GateOpen();
     }
     

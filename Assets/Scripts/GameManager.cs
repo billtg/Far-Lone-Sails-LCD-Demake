@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviour
     //Button1 value
     public int button1State;
     public bool pushingButton1 = false;
+    public float button1PushingTime;
     public float button1StateTime;
     public float button1StateChangedTime;
 
@@ -122,7 +123,7 @@ public class GameManager : MonoBehaviour
     float windSetTime;
     public float windChangeTime;
 
-
+    //Audio
     AudioSource audioSource;
     public AudioSource gameOverAudio;
     public static GameManager instance;

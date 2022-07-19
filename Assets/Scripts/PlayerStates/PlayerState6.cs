@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerState6 : PlayerBaseState
 {
+    //This state controls pushing of the Motor button
     int thisState = 6;
-    float buttonTime = 1;
     float startedPushing;
 
     public override void EnterState(GameManager gm)
@@ -14,27 +14,22 @@ public class PlayerState6 : PlayerBaseState
     }
     public override void MoveLeft(GameManager gm)
     {
-        Debug.Log("Moving Left");
         gm.pushingButton1 = false;
         gm.ChangePlayerState(gm.ps5);
     }
-    public override void MoveRight(GameManager gm)
-    {
-        //Debug.Log("Won't Work");
-        //Debug.Log("Moving Right");
-        //gm.ChangePlayerState(gm.ps0);
-    }
     public override void Jump(GameManager gm)
     {
-        //Debug.Log("Won't Work");
-        //Debug.Log("Moving Up");
         gm.ChangePlayerState(gm.ps12);
     }
 
     public override void PlayerUpdate(GameManager gm)
     {
+        //Ignore if the button is already pushed, or the motor is dead
         if (gm.button1State == 3)
             return;
+        if (Health.instance.motorHealth == 0)
+            return;
+
         //Push Button1 in if it's not already pushed in
         if (Input.GetKey(KeyCode.RightArrow))
         {
@@ -44,16 +39,17 @@ public class PlayerState6 : PlayerBaseState
             if (gm.fuel == 0)
                 return;
 
-            //Debug.Log("Pushing");
+            //Start pushing the button if it wasn't started
             if (!gm.pushingButton1)
             {
                 Debug.Log("Started pushing button");
                 gm.pushingButton1 = true;
                 startedPushing = Time.time;
-                if (gm.brakeActive)
-                    Brake.instance.Button4Pushed(false);
+                //if (gm.brakeActive)
+                //    Brake.instance.Button4Pushed(false);
             }
-            if (Time.time - startedPushing > buttonTime)
+
+            if (Time.time - startedPushing > gm.button1PushingTime*Health.instance.motorDelayFactor)
             {
                 //Check for blocking gate
                 if (gm.gateBlocking)

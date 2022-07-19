@@ -3317,9 +3317,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18e1686b30b8e724688dcdcb33edcd64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sailHealth: 2
-  motorHealth: 2
-  fuelHealth: 2
+  sailHealth: 3
+  motorHealth: 3
+  fuelHealth: 3
   lcdSailHealth:
   - {fileID: 1037231687}
   - {fileID: 667713192}
@@ -3341,6 +3341,7 @@ MonoBehaviour:
   - {fileID: 51431646}
   fuelDelayFactor: 1
   sailDelayFactor: 1
+  motorDelayFactor: 1
 --- !u!1 &159130200
 GameObject:
   m_ObjectHideFlags: 0
@@ -10502,6 +10503,7 @@ MonoBehaviour:
   spawnBoxChance: 2
   button1State: 0
   pushingButton1: 0
+  button1PushingTime: 1
   button1StateTime: 0
   button1StateChangedTime: 0
   button2Pushed: 0
@@ -15715,6 +15717,7 @@ MonoBehaviour:
   doorClosedDelay: 3
   fuelGaugeLoadingDelay: 0.1
   doorOpenDelay: 0.2
+  doorRollDelay: 0.5
 --- !u!1 &1024902220
 GameObject:
   m_ObjectHideFlags: 0

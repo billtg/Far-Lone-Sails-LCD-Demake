@@ -17,6 +17,7 @@ public class Health : MonoBehaviour
 
     public float fuelDelayFactor =1;
     public float sailDelayFactor = 1;
+    public float motorDelayFactor = 1;
 
     private void Awake()
     {
@@ -47,15 +48,17 @@ public class Health : MonoBehaviour
                 if (sailHealth == 0 && GameManager.instance.sailsUp)
                     GameManager.instance.ChangeSail();
                 if (sailHealth > 0)
-                    sailDelayFactor = 3 / sailHealth;
+                    sailDelayFactor = 3f / sailHealth;
                 break;
             case HealthBar.motor:
                 motorHealth = value;
+                if (motorHealth > 0)
+                    motorDelayFactor = 3f / motorHealth;
                 break;
             case HealthBar.fuel:
                 fuelHealth = value;
                 if (fuelHealth > 0)
-                    fuelDelayFactor = 3 / fuelHealth;
+                    fuelDelayFactor = 3f / fuelHealth;
                 break;
         }
         UpdateHealthBarLCD();
