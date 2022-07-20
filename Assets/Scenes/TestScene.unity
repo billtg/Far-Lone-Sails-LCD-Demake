@@ -15702,7 +15702,8 @@ MonoBehaviour:
   lcdDummyGate: {fileID: 132799268}
   lcdArrow: {fileID: 461346679}
   lcdLeavingGate: {fileID: 1315813848}
-  ticksToGate: 10
+  ticksToGate: 50
+  gateTicksDelay: 75
   gateState: 0
   gateSpawned: 0
   gateOpen: 0

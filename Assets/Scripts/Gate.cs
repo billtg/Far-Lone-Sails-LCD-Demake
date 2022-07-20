@@ -28,6 +28,7 @@ public class Gate : MonoBehaviour
 
     [Header("Variables")]
     public int ticksToGate;
+    public int gateTicksDelay;
     public int gateState = 0;
     public bool gateSpawned;
     public bool gateOpen;
@@ -100,6 +101,9 @@ public class Gate : MonoBehaviour
         gateState = 1;
         lcdArrow.SetActive(true);
         timeSinceLastArrow = Time.time;
+
+        //Set up for the next gate
+        ticksToGate = GameManager.instance.odometerAmount + Random.Range(gateTicksDelay - 10, gateTicksDelay + 20);
         
     }
 

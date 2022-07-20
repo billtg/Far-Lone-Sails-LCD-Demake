@@ -359,7 +359,12 @@ public class GameManager : MonoBehaviour
         //Combine motor and sail speed, check for brake, then update relevant lcds
         //Steampower is only added when the motor is running.
         if (motorSpeed > 0)
+        {
+            //Check for severe motor damage
+            if (Health.instance.motorHealth == 1)
+                motorSpeed--;
             speed = motorSpeed + steamPower + sailSpeed;
+        }
         else
             speed = sailSpeed;
         //Negate speed when the brake is on, or gate blocking
@@ -521,10 +526,7 @@ public class GameManager : MonoBehaviour
                     Odometer.instance.UpdateOdometer(odometerAmount);
 
                 //Spawn a gate. Currently happens at 20 at 100 m.
-                if (odometerAmount == Gate.instance.ticksToGate || odometerAmount == 100)
-                    Gate.instance.SpawnGate();
-                if (Gate.instance.gateSpawned)
-                    Gate.instance.MoveGate();
+                SpawnGate();
             }
         }
     }
@@ -782,5 +784,13 @@ public class GameManager : MonoBehaviour
         //Drop the sail, set them on fire
         ChangeSail();
         Fire.instance.CatchFire(HealthBar.sails);
+    }
+
+    public void SpawnGate()
+    {
+        if (odometerAmount == Gate.instance.ticksToGate)
+            Gate.instance.SpawnGate();
+        if (Gate.instance.gateSpawned)
+            Gate.instance.MoveGate();
     }
 }
