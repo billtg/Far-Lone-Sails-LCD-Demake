@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerState31 : PlayerBaseState
 {
@@ -25,7 +26,7 @@ public class PlayerState31 : PlayerBaseState
     public override void PlayerUpdate(GameManager gm)
     {
         //Push Button5 in
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Gamepad.current.dpad.right.isPressed || Keyboard.current.rightArrowKey.isPressed)
         {
             //Start the timer if you're just starting to push it
             if (!pushingButton5)

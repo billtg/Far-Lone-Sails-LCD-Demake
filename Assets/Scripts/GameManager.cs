@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -235,22 +236,28 @@ public class GameManager : MonoBehaviour
         FireHose.instance.InitializeFireHose();
         Health.instance.UpdateHealthBarLCD();
     }
-
+    
+    public void Left()
+    {
+        currentPlayerState.MoveLeft(this);
+    }
     void CheckForInput()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        var gamepad = Gamepad.current;
+        var keyboard = Keyboard.current;
+        if (gamepad.dpad.left.wasPressedThisFrame || keyboard.leftArrowKey.wasPressedThisFrame)
             currentPlayerState.MoveLeft(this);
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (gamepad.dpad.right.wasPressedThisFrame || keyboard.rightArrowKey.wasPressedThisFrame)
             currentPlayerState.MoveRight(this);
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (gamepad.dpad.up.wasPressedThisFrame || keyboard.upArrowKey.wasPressedThisFrame)
             currentPlayerState.MoveUp(this);
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (gamepad.dpad.down.wasPressedThisFrame || keyboard.downArrowKey.wasPressedThisFrame)
             currentPlayerState.MoveDown(this);
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (gamepad.buttonWest.wasPressedThisFrame || keyboard.zKey.wasPressedThisFrame)
             currentPlayerState.Grab(this);
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (gamepad.buttonSouth.wasPressedThisFrame || keyboard.xKey.wasPressedThisFrame)
             currentPlayerState.Jump(this);
-        if (Input.GetKeyDown(KeyCode.R))
+        if (keyboard.rKey.wasPressedThisFrame)
             SceneManager.LoadScene(0);
     }
 

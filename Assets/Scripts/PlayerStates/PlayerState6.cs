@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerState6 : PlayerBaseState
 {
@@ -31,7 +32,7 @@ public class PlayerState6 : PlayerBaseState
             return;
 
         //Push Button1 in if it's not already pushed in
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Gamepad.current.dpad.right.isPressed || Keyboard.current.rightArrowKey.isPressed)
         {
             //Release the brake
             if (gm.brakeActive)
