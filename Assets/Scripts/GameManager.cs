@@ -237,26 +237,21 @@ public class GameManager : MonoBehaviour
         Health.instance.UpdateHealthBarLCD();
     }
     
-    public void Left()
+    void CheckForInput() //No longer used. See InputManager
     {
-        currentPlayerState.MoveLeft(this);
-    }
-    void CheckForInput()
-    {
-        var gamepad = Gamepad.current;
         var keyboard = Keyboard.current;
-        if (gamepad.dpad.left.wasPressedThisFrame || keyboard.leftArrowKey.wasPressedThisFrame)
+        if (keyboard.leftArrowKey.wasPressedThisFrame)
             currentPlayerState.MoveLeft(this);
-        if (gamepad.dpad.right.wasPressedThisFrame || keyboard.rightArrowKey.wasPressedThisFrame)
+        if (keyboard.rightArrowKey.wasPressedThisFrame)
             currentPlayerState.MoveRight(this);
-        if (gamepad.dpad.up.wasPressedThisFrame || keyboard.upArrowKey.wasPressedThisFrame)
+        if (keyboard.upArrowKey.wasPressedThisFrame)
             currentPlayerState.MoveUp(this);
-        if (gamepad.dpad.down.wasPressedThisFrame || keyboard.downArrowKey.wasPressedThisFrame)
+        if (keyboard.downArrowKey.wasPressedThisFrame)
             currentPlayerState.MoveDown(this);
-        if (gamepad.buttonWest.wasPressedThisFrame || keyboard.zKey.wasPressedThisFrame)
-            currentPlayerState.Grab(this);
-        if (gamepad.buttonSouth.wasPressedThisFrame || keyboard.xKey.wasPressedThisFrame)
+        if (keyboard.zKey.wasPressedThisFrame)
             currentPlayerState.Jump(this);
+        if (keyboard.xKey.wasPressedThisFrame)
+            currentPlayerState.Grab(this);
         if (keyboard.rKey.wasPressedThisFrame)
             SceneManager.LoadScene(0);
     }

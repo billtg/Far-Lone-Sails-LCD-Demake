@@ -33,6 +33,11 @@ public class FireHose : MonoBehaviour
     public float timeToDrainFuel;
     public HealthBar weldTarget;
 
+    public float nozzleFlashTime;
+    float lastNozzleFlash;
+    public float welderFlashTime;
+    float lastWelderFlash;
+
     public float waterAnimationTime;
     float lastWaterAnimationTime;
     public int waterAnimationState = 0;
@@ -208,6 +213,12 @@ public class FireHose : MonoBehaviour
 
     private void Update()
     {
+        //Flash the welder/nozzle if they're needed and not held.
+        if ((Fire.instance.fuelOnFire || Fire.instance.motorOnFire || Fire.instance.sailsOnFire) && !GameManager.instance.playerHoldingNozzle)
+            FlashNozzle();
+        if (!Health.instance.AtFullHealth() && !GameManager.instance.playerHoldingWelder)
+            FlashWelder();
+
         //Only update if actively hosing
         if (!hosing && !welding)
             return;
@@ -307,6 +318,24 @@ public class FireHose : MonoBehaviour
         }
     }
 
+    void FlashNozzle()
+    {
+        if (Time.time - lastNozzleFlash > nozzleFlashTime)
+        {
+            parkedNozzle.SetActive(!parkedNozzle.activeSelf);
+            lastNozzleFlash = Time.time;
+        }
+    }
+
+    void FlashWelder()
+    {
+        if (Time.time - lastWelderFlash > welderFlashTime)
+        {
+            parkedWelder.SetActive(!parkedWelder.activeSelf);
+            lastWelderFlash = Time.time;
+        }
+    }
+
     void AnimateWater(List<GameObject> lcdAnimateWater)
     {
         //After the animation delay, set the current animation state lcd on, then increment and reset time
@@ -326,7 +355,6 @@ public class FireHose : MonoBehaviour
         //Flicker the welding arc for this state
         if (Time.time - lastWeldingAnimationTime > weldingAnimationTime)
         {
-            Debug.Log("Flicker");
             weldingAnimationTarget.SetActive(!weldingAnimationTarget.activeSelf);
             lastWeldingAnimationTime = Time.time;
             weldingAnimationTime = Random.Range(0.01f, 0.1f);

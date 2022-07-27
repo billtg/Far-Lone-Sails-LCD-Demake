@@ -129,6 +129,14 @@ public class Health : MonoBehaviour
             lcdList[i].SetActive(true);
         }
     }
+
+    public bool AtFullHealth()
+    {
+        if (fuelHealth == 3 && motorHealth == 3 && sailHealth == 3)
+            return true;
+        else
+            return false;
+    }
 }
 
 public enum HealthBar { sails, motor, fuel}

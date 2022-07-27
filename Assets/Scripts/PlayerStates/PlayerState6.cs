@@ -32,7 +32,7 @@ public class PlayerState6 : PlayerBaseState
             return;
 
         //Push Button1 in if it's not already pushed in
-        if (Gamepad.current.dpad.right.isPressed || Keyboard.current.rightArrowKey.isPressed)
+        if (Keyboard.current.rightArrowKey.isPressed)
         {
             //Release the brake
             if (gm.brakeActive)
