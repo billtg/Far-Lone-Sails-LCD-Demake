@@ -30,7 +30,7 @@ public class PlayerState8 : PlayerBaseState
     }
     public override void Jump(GameManager gm)
     {
-        if (!gm.button2Pushed && !gm.playerHoldingNozzle && !gm.playerHoldingWelder && Health.instance.fuelHealth > 0)
+        if (!gm.button2Pushed && !gm.playerHoldingNozzle && !gm.playerHoldingWelder && Health.instance.fuelHealth > 0 && !gm.beaconSpawned)
         {
             gm.ChangePlayerState(gm.ps10);
         }

@@ -25,11 +25,10 @@ public class PlayerState6 : PlayerBaseState
 
     public override void PlayerUpdate(GameManager gm)
     {
-        //Ignore if the button is already pushed, or the motor is dead
-        if (gm.button1State == 3)
-            return;
-        if (Health.instance.motorHealth == 0)
-            return;
+        //Ignore if the button is already pushed, or the motor is dead, or the beacon is spawned
+        if (gm.button1State == 3) return;
+        if (Health.instance.motorHealth == 0) return;
+        if (gm.beaconSpawned) return;
 
         //Push Button1 in if it's not already pushed in
         if (Keyboard.current.rightArrowKey.isPressed)
@@ -46,8 +45,7 @@ public class PlayerState6 : PlayerBaseState
                 Debug.Log("Started pushing button");
                 gm.pushingButton1 = true;
                 startedPushing = Time.time;
-                //if (gm.brakeActive)
-                //    Brake.instance.Button4Pushed(false);
+                //Start the button audio here
             }
 
             if (Time.time - startedPushing > gm.button1PushingTime*Health.instance.motorDelayFactor)

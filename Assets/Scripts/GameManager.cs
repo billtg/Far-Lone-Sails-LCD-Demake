@@ -64,6 +64,13 @@ public class GameManager : MonoBehaviour
     public PlayerState42 ps42 = new PlayerState42();
     public PlayerState43 ps43 = new PlayerState43();
     public PlayerState44 ps44 = new PlayerState44();
+    public PlayerState45 ps45 = new PlayerState45();
+    public PlayerState46 ps46 = new PlayerState46();
+    public PlayerState47 ps47 = new PlayerState47();
+    public PlayerState48 ps48 = new PlayerState48();
+    public PlayerState49 ps49 = new PlayerState49();
+    public PlayerState50 ps50 = new PlayerState50();
+    public PlayerState51 ps51 = new PlayerState51();
 
     //Gameplay values
     bool gameOver;
@@ -77,6 +84,9 @@ public class GameManager : MonoBehaviour
     public int speed;
     public int odometerAmount;
     public bool gateBlocking;
+    public bool beaconSpawned;
+    public bool beaconLit;
+    public int ticksUntilWin;
 
     //Box Spawning
     public int spawnBoxIndex;
@@ -205,6 +215,7 @@ public class GameManager : MonoBehaviour
         Health.instance.ClearHealthLCDs();
         Fire.instance.ClearFireLCDs();
         Gate.instance.ClearGate();
+        Beacon.instance.ClearBeaconLCDs();
     }
     void ClearPlayers()
     {
@@ -237,7 +248,7 @@ public class GameManager : MonoBehaviour
         Health.instance.UpdateHealthBarLCD();
     }
     
-    void CheckForInput() //No longer used. See InputManager
+    void CheckForInput()
     {
         var keyboard = Keyboard.current;
         if (keyboard.leftArrowKey.wasPressedThisFrame)
@@ -370,7 +381,7 @@ public class GameManager : MonoBehaviour
         else
             speed = sailSpeed;
         //Negate speed when the brake is on, or gate blocking
-        if (brakeActive || gateBlocking) speed = 0;
+        if (brakeActive || gateBlocking || beaconSpawned) speed = 0;
         //Update the speedometer and the flap
         Speedometer.instance.UpdateSpeedometer(speed);
         FrontFlap.instance.UpdateFrontFlap(speed);
@@ -378,7 +389,7 @@ public class GameManager : MonoBehaviour
 
     void UpdateButton1()
     {
-        if (pushingButton1)
+        if (pushingButton1 || beaconSpawned)
             return;
 
         switch (button1State)
@@ -505,7 +516,7 @@ public class GameManager : MonoBehaviour
     //Moving the vehicle
     void MoveVehicle()
     {
-        if (speed == 0)
+        if (speed == 0 || beaconSpawned)
             return;
         else
         {
@@ -522,8 +533,8 @@ public class GameManager : MonoBehaviour
                 MoveGroundItems();
                 SpawnBoxes();
                 odometerAmount++;
-                if (odometerAmount == 10000)
-                    Debug.Log("WINN");
+                if (odometerAmount == ticksUntilWin)
+                    SpawnBeacon();
                 else
                     Odometer.instance.UpdateOdometer(odometerAmount);
 
@@ -715,6 +726,7 @@ public class GameManager : MonoBehaviour
 
     void UpdateWind()
     {
+        if (beaconLit) return;
         if (Time.time - windSetTime > windChangeTime)
         {
             Debug.Log("Changing wind");
@@ -794,5 +806,24 @@ public class GameManager : MonoBehaviour
             Gate.instance.SpawnGate();
         if (Gate.instance.gateSpawned)
             Gate.instance.MoveGate();
+    }
+
+    public void SpawnBeacon()
+    {
+        beaconSpawned = true;
+        Beacon.instance.ActivateBeaconLCDs();
+
+        //Stop the vehicle
+        speed = 0;
+        SetButton1State(1);
+    }
+
+    public void EndOfGame()
+    {
+        Debug.Log("You win");
+        lcdGroundBoxes[49].SetActive(false);
+        //Play music
+        //Show time
+        //Set the flag to backwards
     }
 }

@@ -102,8 +102,10 @@ public class Gate : MonoBehaviour
         lcdArrow.SetActive(true);
         timeSinceLastArrow = Time.time;
 
-        //Set up for the next gate
+        //Set up for the next gate. Don't spawn it if it's too close to the end amount
         ticksToGate = GameManager.instance.odometerAmount + Random.Range(gateTicksDelay - 10, gateTicksDelay + 20);
+        if (GameManager.instance.ticksUntilWin - ticksToGate < 20)
+            ticksToGate = 10000;
         
     }
 

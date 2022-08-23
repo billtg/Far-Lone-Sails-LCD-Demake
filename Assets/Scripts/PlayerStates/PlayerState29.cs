@@ -15,6 +15,9 @@ public class PlayerState29 : PlayerBaseState
     }
     public override void MoveRight(GameManager gm)
     {
+        //Only go right if th ebeacon is spawned
+        if (gm.beaconSpawned)
+            gm.ChangePlayerState(gm.ps45);
     }
     public override void Grab(GameManager gm)
     {
