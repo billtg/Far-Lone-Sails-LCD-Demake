@@ -109,6 +109,12 @@ public class Gate : MonoBehaviour
         
     }
 
+    public void ResetGate()
+    {
+        gateState = 0;
+        ChangeGateState();
+        gateMoveTicks = 0;
+    }
     public void MoveGate()
     {
         //Accumulate ticks, move gates between states

@@ -74,6 +74,7 @@ public class GameManager : MonoBehaviour
 
     //Gameplay values
     bool gameOver;
+    public int lives = 3;
     public float gameOverDelay = 3;
     public float playerHangTime;
     public bool playerHoldingBox;
@@ -174,6 +175,22 @@ public class GameManager : MonoBehaviour
 
         //Set the wind set time
         windSetTime = Time.time;
+
+        //Start the timer, but only if it's not due to game over
+        if (!gameOver) Timer.instance.StartTimer();
+
+        //Extra resetting stuff that has to happen when you die
+        gameOver = false;
+        Gate.instance.ResetGate();
+        gateBlocking = false;
+        sailsUp = false;
+        motorSpeed = 0;
+        sailSpeed = 0;
+        UpdateSpeed();
+        Fire.instance.DouseFire(HealthBar.fuel);
+        Fire.instance.DouseFire(HealthBar.motor);
+        Fire.instance.DouseFire(HealthBar.sails);
+
     }
 
     // Update is called once per frame
@@ -216,6 +233,9 @@ public class GameManager : MonoBehaviour
         Fire.instance.ClearFireLCDs();
         Gate.instance.ClearGate();
         Beacon.instance.ClearBeaconLCDs();
+        Digits.instance.ClearDigitLCDs();
+        Lives.instance.ClearLivesLCDs();
+        Timer.instance.ClearTimerLCDs();
     }
     void ClearPlayers()
     {
@@ -246,6 +266,9 @@ public class GameManager : MonoBehaviour
         Sails.instance.SetSails(0);
         FireHose.instance.InitializeFireHose();
         Health.instance.UpdateHealthBarLCD();
+        Digits.instance.UpdateOdometer(odometerAmount);
+        Lives.instance.UpdateLives(lives);
+        Timer.instance.ActivateDots();
     }
     
     void CheckForInput()
@@ -536,7 +559,8 @@ public class GameManager : MonoBehaviour
                 if (odometerAmount == ticksUntilWin)
                     SpawnBeacon();
                 else
-                    Odometer.instance.UpdateOdometer(odometerAmount);
+                    Digits.instance.UpdateOdometer(odometerAmount);
+                    //Odometer.instance.UpdateOdometer(odometerAmount);
 
                 //Spawn a gate. Currently happens at 20 at 100 m.
                 SpawnGate();
@@ -548,7 +572,7 @@ public class GameManager : MonoBehaviour
     {
         //Check for Game Over
         if (currentPlayerState.GameOver())
-            GameOver();
+            Die();
         //Move the Player
         if (currentPlayerState.IsOnGround())
             currentPlayerState.MoveLeft(this);
@@ -691,6 +715,28 @@ public class GameManager : MonoBehaviour
             lcdGroundBoxes[spawnBoxIndex].SetActive(true);
         }    
     }
+    
+    void Die()
+    {
+        lives--;
+        if (lives < 0)
+            GameOver();
+        else
+        {
+            Lives.instance.UpdateLives(lives);
+            //Respawn the player, but don't reset the odometer
+            StartCoroutine(DeathDelay());
+        }
+    }
+
+    IEnumerator DeathDelay()
+    {
+        gameOver = true;
+        yield return new WaitForSeconds(3f);
+        int odometerTemp = odometerAmount;
+        Start();
+        odometerAmount = odometerTemp;
+    }
     void GameOver()
     {
         gameOver = true;
@@ -824,6 +870,7 @@ public class GameManager : MonoBehaviour
         lcdGroundBoxes[49].SetActive(false);
         //Play music
         //Show time
+        Timer.instance.StopTimer();
         //Set the flag to backwards
     }
 }
