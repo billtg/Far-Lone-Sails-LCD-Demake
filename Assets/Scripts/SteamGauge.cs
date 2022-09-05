@@ -20,7 +20,7 @@ public class SteamGauge : MonoBehaviour
 
     public void SetSteamState(int state)
     {
-        ClearSteam();
+        ClearSteam(false);
         switch (state)
         {
             case 0:
@@ -50,11 +50,16 @@ public class SteamGauge : MonoBehaviour
         steamState = state;
         SetButton3LCD(button3Pushed);
     }
-
-    public void ClearSteam()
+    public void ClearSteamLCDs(bool active)
+    {
+        ClearSteam(active);
+        foreach (GameObject button1Object in lcdButton3)
+            button1Object.SetActive(active);
+    }
+    public void ClearSteam(bool active)
     {
         foreach (GameObject steamObject in lcdSteam)
-            steamObject.SetActive(false);
+            steamObject.SetActive(active);
     }
 
     public void PressButton3()

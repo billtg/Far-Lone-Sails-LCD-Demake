@@ -21,7 +21,7 @@ public class Flag : MonoBehaviour
 
     public void SetFlagState(int state)
     {
-        ClearFlag();
+        ClearFlag(false);
         lcdFlagPole.SetActive(true);
         lcdFlags[0].SetActive(true);
         switch (state)
@@ -45,15 +45,17 @@ public class Flag : MonoBehaviour
         }
     }
 
-    public void ClearFlag()
+    public void ClearFlag(bool active)
     {
         foreach (GameObject flagObject in lcdFlags)
-            flagObject.SetActive(false);
-        lcdFlagPole.SetActive(false);
+            flagObject.SetActive(active);
+        lcdFlagPole.SetActive(active);
     }
 
     private void Update()
     {
+        if (GameManager.instance.gameOver)
+            return;
         if (lcdFlags[4].activeSelf)
         {
             if (Time.time - timeSinceFlap > flapTime)

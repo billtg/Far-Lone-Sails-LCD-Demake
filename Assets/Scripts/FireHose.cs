@@ -75,7 +75,7 @@ public class FireHose : MonoBehaviour
 
     public void PickupNozzle()
     {
-        Debug.Log("Picked up nozzle");
+        //Debug.Log("Picked up nozzle");
         //Turn on the lcds.
         parkedNozzle.SetActive(false);
         lcdHeldNozzles[37].SetActive(true);
@@ -84,7 +84,7 @@ public class FireHose : MonoBehaviour
 
     public void PickupWelder()
     {
-        Debug.Log("Picking up Welder");
+        //Debug.Log("Picking up Welder");
         //turn on the LCDs
         parkedWelder.SetActive(false);
         lcdHeldWelders[38].SetActive(true);
@@ -94,7 +94,7 @@ public class FireHose : MonoBehaviour
 
     public void DropNozzle()
     {
-        Debug.Log("Dropped Nozzle");
+        //Debug.Log("Dropped Nozzle");
         //Clear hose lcds, clear heldnozzle, turn on parkednozzle;
         InitializeFireHose();
         StopHosing();
@@ -102,7 +102,7 @@ public class FireHose : MonoBehaviour
 
     public void DropWelder()
     {
-        Debug.Log("Dropped welder");
+        //Debug.Log("Dropped welder");
         //Clear hose lcds, clear heldnozzle, turn on parkednozzle;
         InitializeFireHose();
         StopWelding();
@@ -188,6 +188,7 @@ public class FireHose : MonoBehaviour
         hosing = true;
         timeStartedHosing = Time.time;
         this.hoseTarget = hoseTarget;
+        AudioManager.instance.FireHose();
     }
 
     public void StopHosing()
@@ -195,6 +196,7 @@ public class FireHose : MonoBehaviour
         hosing = false;
         ClearWaterLCDs();
         waterAnimationState = 0;
+        AudioManager.instance.StopHosing();
     }
 
     public void StartWelding(HealthBar weldTarget)
@@ -230,7 +232,7 @@ public class FireHose : MonoBehaviour
                 case HealthBar.fuel:
                     if (Time.time - timeStartedHosing > timeToDouse)
                     {
-                        Debug.Log("Fuel fire is out");
+                        //Debug.Log("Fuel fire is out");
                         Fire.instance.DouseFire(HealthBar.fuel);
                         StopHosing();
                     }
@@ -240,7 +242,7 @@ public class FireHose : MonoBehaviour
                 case HealthBar.motor:
                     if (Time.time - timeStartedHosing > timeToDouse)
                     {
-                        Debug.Log("Motor fire is out");
+                        //Debug.Log("Motor fire is out");
                         Fire.instance.DouseFire(HealthBar.motor);
                         StopHosing();
                     }
@@ -250,7 +252,7 @@ public class FireHose : MonoBehaviour
                 case HealthBar.sails:
                     if (Time.time - timeStartedHosing > timeToDouse)
                     {
-                        Debug.Log("Sails fire is out");
+                        //Debug.Log("Sails fire is out");
                         Fire.instance.DouseFire(HealthBar.sails);
                         StopHosing();
                     }
@@ -269,7 +271,7 @@ public class FireHose : MonoBehaviour
                 case HealthBar.fuel:
                     if (Time.time - timeStartedWelding > timeToWeld)
                     {
-                        Debug.Log("Fuel health increased");
+                        //Debug.Log("Fuel health increased");
                         Health.instance.RemoveDamage(HealthBar.fuel);
                         if (Health.instance.fuelHealth == 3)
                             StopWelding();
@@ -282,7 +284,7 @@ public class FireHose : MonoBehaviour
                 case HealthBar.motor:
                     if (Time.time - timeStartedWelding > timeToWeld)
                     {
-                        Debug.Log("Motor health increased");
+                        //Debug.Log("Motor health increased");
                         Health.instance.RemoveDamage(HealthBar.motor);
                         if (Health.instance.motorHealth == 3)
                             StopWelding();
@@ -295,7 +297,7 @@ public class FireHose : MonoBehaviour
                 case HealthBar.sails:
                     if (Time.time - timeStartedWelding > timeToWeld)
                     {
-                        Debug.Log("Sail health increased");
+                        //Debug.Log("Sail health increased");
                         Health.instance.RemoveDamage(HealthBar.sails);
                         if (Health.instance.sailHealth == 3)
                             StopWelding();
@@ -377,4 +379,30 @@ public class FireHose : MonoBehaviour
             weldingObject.SetActive(false);
     }
 
+    public void TurnOnAllLCDs()
+    {
+        //Nozzles
+        foreach (GameObject nozzleObject in lcdHeldNozzles)
+            nozzleObject.SetActive(true);
+        foreach (GameObject nozzleObject in lcdHeldWelders)
+            nozzleObject.SetActive(true);
+        parkedNozzle.SetActive(true);
+        parkedWelder.SetActive(true);
+
+        //Hoses
+        foreach (GameObject hoseObject in lcdHoses)
+            hoseObject.SetActive(true);
+        hoseRoll.SetActive(true);
+
+        //Welding
+        foreach (GameObject weldingObject in lcdWeldingArcs)
+            weldingObject.SetActive(true);
+        //Water
+        foreach (GameObject waterObject in lcdFuelWater)
+            waterObject.SetActive(true);
+        foreach (GameObject waterObject in lcdSailsWater)
+            waterObject.SetActive(true);
+        foreach (GameObject waterObject in lcdMotorWater)
+            waterObject.SetActive(true);
+    }
 }

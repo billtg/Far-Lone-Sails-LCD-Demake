@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public List<GameObject> lcdLifts;
     public List<GameObject> lcdFuelGauge;
     public List<GameObject> lcdsmallWheel;
+    public List<GameObject> lcdStatics;
     //public List<GameObject> lcdInteractables;
 
     //Player States
@@ -73,7 +74,7 @@ public class GameManager : MonoBehaviour
     public PlayerState51 ps51 = new PlayerState51();
 
     //Gameplay values
-    bool gameOver;
+    public bool gameOver;
     public int lives = 3;
     public float gameOverDelay = 3;
     public float playerHangTime;
@@ -145,7 +146,66 @@ public class GameManager : MonoBehaviour
         instance = this;
     }
     // Start is called before the first frame update
-    void Start()
+    private void Start()
+    {
+        gameOver = true;
+        ClearScreen();
+        StartCoroutine(BootSequence());
+        //gameOver = false;
+        //StartGame();
+    }
+
+    IEnumerator BootSequence()
+    {
+        yield return new WaitForSeconds(1);
+        //Turn on all displays
+        TurnOnEveryLCD();
+        yield return new WaitForSeconds(3);
+        gameOver = false;
+        StartGame();
+    }
+
+    void TurnOnEveryLCD()
+    {
+        FireHose.instance.TurnOnAllLCDs();
+        FrontFlap.instance.ClearFrontFlap(true);
+        Brake.instance.ClearBrakeLCDs(true);
+        Elevator.instance.ClearElevator(true);
+        FuelGauge.instance.ClearFuelGauge(true);
+        SteamGauge.instance.ClearSteamLCDs(true);
+        Speedometer.instance.ClearSpeedometerLCDs(true);
+        Flag.instance.ClearFlag(true);
+        Sails.instance.ClearSails(true);
+        Health.instance.ClearHealthLCDs(true);
+        Fire.instance.ClearFireLCDs(true);
+        Gate.instance.ClearGate(true);
+        Beacon.instance.ClearBeaconLCDs(true);
+        Digits.instance.ClearDigitLCDs(true);
+        Lives.instance.ClearLivesLCDs(true);
+        Timer.instance.ClearTimerLCDs(true);
+
+        //GameManager Objects
+        foreach (GameObject playerObject in lcdPlayers)
+            playerObject.SetActive(true);
+        foreach (GameObject boxObject in lcdHeldBoxes)
+            boxObject.SetActive(true);
+        foreach (GameObject boxObject in lcdGroundBoxes)
+            boxObject.SetActive(true);
+        foreach (GameObject staticObject in lcdStatics)
+            staticObject.SetActive(true);
+        foreach (GameObject groundObject in lcdGrounds)
+            groundObject.SetActive(true);
+        foreach (GameObject liftObject in lcdLifts)
+            liftObject.SetActive(true);
+        foreach (GameObject buttonObject in lcdButton1)
+            buttonObject.SetActive(true);
+        foreach (GameObject buttonObject in lcdButton2)
+            buttonObject.SetActive(true);
+        foreach (GameObject wheelObject in lcdsmallWheel)
+            wheelObject.SetActive(true);
+    }
+
+    void StartGame()
     {
         //play a little ditty with all the objects active
 
@@ -218,29 +278,52 @@ public class GameManager : MonoBehaviour
 
     void ClearScreen()
     {
+        ClearStatics();
         ClearPlayers();
-        foreach (GameObject button1Object in lcdButton1)
-            button1Object.SetActive(false);
+        ClearButtons();
         ClearHeldBoxes();
         ClearGroundBoxes();
-        FuelGauge.instance.ClearFuelGauge();
-        Flag.instance.ClearFlag();
-        Sails.instance.ClearSails();
+        ClearLifts();
+        ClearWheel();
+        FrontFlap.instance.ClearFrontFlap(false);
+        Brake.instance.ClearBrakeLCDs(false);
+        Elevator.instance.ClearElevator(false);
+        FuelGauge.instance.ClearFuelGauge(false);
+        SteamGauge.instance.ClearSteamLCDs(false);
+        Speedometer.instance.ClearSpeedometerLCDs(false);
+        Flag.instance.ClearFlag(false);
+        Sails.instance.ClearSails(false);
         FireHose.instance.ClearFireHoses();
         FireHose.instance.ClearWaterLCDs();
         FireHose.instance.ClearWeldingLCDs();
-        Health.instance.ClearHealthLCDs();
-        Fire.instance.ClearFireLCDs();
-        Gate.instance.ClearGate();
-        Beacon.instance.ClearBeaconLCDs();
-        Digits.instance.ClearDigitLCDs();
-        Lives.instance.ClearLivesLCDs();
-        Timer.instance.ClearTimerLCDs();
+        Health.instance.ClearHealthLCDs(false);
+        Fire.instance.ClearFireLCDs(false);
+        Gate.instance.ClearGate(false);
+        Beacon.instance.ClearBeaconLCDs(false);
+        Digits.instance.ClearDigitLCDs(false);
+        Lives.instance.ClearLivesLCDs(false);
+        Timer.instance.ClearTimerLCDs(false);
+    }
+    void ClearStatics()
+    {
+        foreach (GameObject button1Object in lcdStatics)
+            button1Object.SetActive(false);
+        foreach (GameObject button1Object in lcdGrounds)
+            button1Object.SetActive(false);
     }
     void ClearPlayers()
     {
         foreach (GameObject playerObject in lcdPlayers)
             playerObject.SetActive(false);
+    }
+    void ClearButtons()
+    {
+        //Button 1
+        foreach (GameObject button1Object in lcdButton1)
+            button1Object.SetActive(false);
+        //Button 2
+        foreach (GameObject button1Object in lcdButton2)
+            button1Object.SetActive(false);
     }
     void ClearHeldBoxes()
     {
@@ -252,11 +335,22 @@ public class GameManager : MonoBehaviour
         foreach (GameObject groundBoxObject in lcdGroundBoxes)
             groundBoxObject.SetActive(false);
     }
+    void ClearLifts()
+    {
+        foreach (GameObject liftObject in lcdLifts)
+            liftObject.SetActive(false);
+    }
+    void ClearWheel()
+    {
+        foreach (GameObject wheelObject in lcdsmallWheel)
+            wheelObject.SetActive(false);
+    }
     void InitializeLcdObjects()
     {
         lcdPlayers[0].SetActive(true);
         SetButton1State(1);
         SetButton2(false);
+        ActivateStaticLCDs();
         FuelGauge.instance.SetFuelGauge(fuel);
         Elevator.instance.SetElevatorState(0);
         SteamGauge.instance.SetSteamState(steam);
@@ -270,7 +364,13 @@ public class GameManager : MonoBehaviour
         Lives.instance.UpdateLives(lives);
         Timer.instance.ActivateDots();
     }
-    
+    void ActivateStaticLCDs()
+    {
+        foreach (GameObject button1Object in lcdStatics)
+            button1Object.SetActive(true);
+        foreach (GameObject button1Object in lcdGrounds)
+            button1Object.SetActive(true);
+    }
     void CheckForInput()
     {
         var keyboard = Keyboard.current;
@@ -319,7 +419,7 @@ public class GameManager : MonoBehaviour
         switch (state)
         {
             case 1:
-                Debug.Log("Button1 unpushed");
+                //Debug.Log("Button1 unpushed");
                 //Button Fully unpushed
                 //activate the LCDs
                 lcdButton1[0].SetActive(true);
@@ -388,6 +488,7 @@ public class GameManager : MonoBehaviour
         steamCounter = 0;
         SteamGauge.instance.SetSteamState(steam);
         UpdateSpeed();
+        AudioManager.instance.SteamWhistle();
     }
 
     void UpdateSpeed()
@@ -445,7 +546,7 @@ public class GameManager : MonoBehaviour
     {
         if (pushed)
         {
-            Debug.Log("pushed button 1");
+            //Debug.Log("pushed button 1");
             button2Pushed = true;
             //Update LCDs
             lcdButton2[0].SetActive(false);
@@ -460,9 +561,10 @@ public class GameManager : MonoBehaviour
             //Add Fuel
             if (lcdGroundBoxes[9].activeSelf)
             {
-                Debug.Log("Consumed Fuel");
+                //Debug.Log("Consumed Fuel");
                 lcdGroundBoxes[9].SetActive(false);
                 AddFuel(1);
+                AudioManager.instance.FuelLoad();
             }
         }
         else
@@ -502,7 +604,7 @@ public class GameManager : MonoBehaviour
     {
         if (pickup)
         {
-            Debug.Log("Picking up a box");
+            //Debug.Log("Picking up a box");
             playerHoldingBox = true;
             lcdHeldBoxes[state].SetActive(true);
             lcdGroundBoxes[state].SetActive(false);
@@ -510,7 +612,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Dropping up a box");
+            //Debug.Log("Dropping up a box");
             playerHoldingBox = false;
             lcdHeldBoxes[state].SetActive(false);
             lcdGroundBoxes[state].SetActive(true);
@@ -665,7 +767,7 @@ public class GameManager : MonoBehaviour
     void SteamExplosion()
     {
         //Steam got too high.
-        Debug.Log("Steam Explosion");
+        //Debug.Log("Steam Explosion");
 
         //Vent all the steam. Damage the motor. 
         steam = 0;
@@ -679,8 +781,6 @@ public class GameManager : MonoBehaviour
         //Set the fuel thing on fire
         Fire.instance.CatchFire(HealthBar.fuel);
 
-        //Play the fire alarm
-        AudioManager.instance.FireAlarm();
     }
 
     void UpdateSteam()
@@ -700,6 +800,7 @@ public class GameManager : MonoBehaviour
         {
             brakeActive = true;
             SetButton1State(1);
+            AudioManager.instance.BrakeApplied();
         }
         else
             brakeActive = false;
@@ -711,7 +812,7 @@ public class GameManager : MonoBehaviour
         int spawnRoll = (int)Random.Range(0, 10);
         if (spawnRoll < spawnBoxChance)
         {
-            Debug.Log("Spawning Box");
+            //Debug.Log("Spawning Box");
             lcdGroundBoxes[spawnBoxIndex].SetActive(true);
         }    
     }
@@ -734,7 +835,7 @@ public class GameManager : MonoBehaviour
         gameOver = true;
         yield return new WaitForSeconds(3f);
         int odometerTemp = odometerAmount;
-        Start();
+        StartGame();
         odometerAmount = odometerTemp;
     }
     void GameOver()
@@ -775,7 +876,7 @@ public class GameManager : MonoBehaviour
         if (beaconLit) return;
         if (Time.time - windSetTime > windChangeTime)
         {
-            Debug.Log("Changing wind");
+            //Debug.Log("Changing wind");
             wind = Random.Range(0, 3);
             Flag.instance.SetFlagState(wind);
             if (sailsUp)
@@ -811,7 +912,7 @@ public class GameManager : MonoBehaviour
 
     public void HitGate()
     {
-        Debug.Log("Hit the gate");
+        //Debug.Log("Hit the gate");
         //Stop all movement
         SetButton1State(1);
         gateBlocking = true;

@@ -21,7 +21,7 @@ public class PlayerState0 : PlayerBaseState
     public override void MoveUp(GameManager gm)
     {
         //Debug.Log("Won't Work");
-        Debug.Log("Moving Up");
+        //Debug.Log("Moving Up");
         Elevator.instance.SetElevatorState(1);
         gm.ChangePlayerState(gm.ps1);
     }

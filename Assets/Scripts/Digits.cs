@@ -15,16 +15,16 @@ public class Digits : MonoBehaviour
         instance = this;
     }
 
-    public void ClearDigitLCDs()
+    public void ClearDigitLCDs(bool active)
     {
         foreach (GameObject lcdObject in lcdDigits0)
-            lcdObject.SetActive(false);
+            lcdObject.SetActive(active);
         foreach (GameObject lcdObject in lcdDigits10)
-            lcdObject.SetActive(false);
+            lcdObject.SetActive(active);
         foreach (GameObject lcdObject in lcdDigits100)
-            lcdObject.SetActive(false);
+            lcdObject.SetActive(active);
         foreach (GameObject lcdObject in lcdDigits1000)
-            lcdObject.SetActive(false);
+            lcdObject.SetActive(active);
     }
 
     public void UpdateOdometer(int odometer)

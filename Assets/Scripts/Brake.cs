@@ -17,7 +17,7 @@ public class Brake : MonoBehaviour
 
     public void Button4Pushed(bool pushed)
     {
-        ClearBrakeLCDs();
+        ClearBrakeLCDs(false);
         if (pushed)
         {
             //activate brake, press button
@@ -38,11 +38,10 @@ public class Brake : MonoBehaviour
         }
     }
 
-    public void ClearBrakeLCDs()
+    public void ClearBrakeLCDs(bool active)
     {
         foreach (GameObject buttonObject in lcdButton4)
-            buttonObject.SetActive(false);
-        lcdBrake.SetActive(false);
+            buttonObject.SetActive(active);
+        lcdBrake.SetActive(active);
     }
-
 }

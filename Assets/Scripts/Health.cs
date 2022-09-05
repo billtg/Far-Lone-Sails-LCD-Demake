@@ -24,16 +24,16 @@ public class Health : MonoBehaviour
         instance = this;
     }
 
-    public void ClearHealthLCDs()
+    public void ClearHealthLCDs(bool active)
     {
         foreach (GameObject healthObject in lcdSailHealth)
-            healthObject.SetActive(false);
+            healthObject.SetActive(active);
         foreach (GameObject healthObject in lcdMotorHealth)
-            healthObject.SetActive(false);
+            healthObject.SetActive(active);
         foreach (GameObject healthObject in lcdFuelHealth)
-            healthObject.SetActive(false);
+            healthObject.SetActive(active);
         foreach (GameObject healthObject in lcdSymbols)
-            healthObject.SetActive(false);
+            healthObject.SetActive(active);
     }
 
     public void UpdateHealth(HealthBar healthBar, int value)
@@ -105,7 +105,7 @@ public class Health : MonoBehaviour
     public void UpdateHealthBarLCD()
     {
         //Clear everything, then initialize the symbols and the relevant health bars
-        ClearHealthLCDs();
+        ClearHealthLCDs(false);
         foreach (GameObject healthObject in lcdSymbols)
             healthObject.SetActive(true);
 

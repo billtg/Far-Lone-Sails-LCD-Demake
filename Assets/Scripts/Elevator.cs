@@ -15,7 +15,7 @@ public class Elevator : MonoBehaviour
 
     public void SetElevatorState(int state)
     {
-        ClearElevator();
+        ClearElevator(false);
         if (state < 0 || state > 3)
             Debug.LogError("Invalid State sent to SetElevatorState: " + state.ToString());
         //Check for ground boxes and take them along
@@ -28,9 +28,9 @@ public class Elevator : MonoBehaviour
         elevatorState = state;
     }
 
-    public void ClearElevator()
+    public void ClearElevator(bool active)
     {
         foreach (GameObject elevatorObject in lcdElevator)
-            elevatorObject.SetActive(false);
+            elevatorObject.SetActive(active);
     }
 }

@@ -15,8 +15,15 @@ public class Speedometer : MonoBehaviour
     
     public void UpdateSpeedometer(int speed)
     {
-        foreach (GameObject needleObject in speedNeedles)
-            needleObject.SetActive(false);
+        ClearSpeedometerLCDs(false);
+        middleKnob.SetActive(true);
         speedNeedles[speed].SetActive(true);
+    }
+
+    public void ClearSpeedometerLCDs(bool active)
+    {
+        foreach (GameObject needleObject in speedNeedles)
+            needleObject.SetActive(active);
+        middleKnob.SetActive(active);
     }
 }

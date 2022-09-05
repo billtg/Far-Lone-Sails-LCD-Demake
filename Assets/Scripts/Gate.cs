@@ -56,35 +56,35 @@ public class Gate : MonoBehaviour
         gateMoveTicks = 0;
     }
 
-    public void ClearGate()
+    public void ClearGate(bool active)
     {
         //Clear frame, ladder doors
-        lcdFrame.SetActive(false);
-        lcdLadder0.SetActive(false);
-        lcdLadder1.SetActive(false);
+        lcdFrame.SetActive(active);
+        lcdLadder0.SetActive(active);
+        lcdLadder1.SetActive(active);
         foreach (GameObject lcdObject in lcdDoors)
-            lcdObject.SetActive(false);
+            lcdObject.SetActive(active);
         foreach (GameObject lcdObject in lcdDoorRoll)
-            lcdObject.SetActive(false);
+            lcdObject.SetActive(active);
 
         //Cear fuel tank
-        lcdFuelTank.SetActive(false);
-        lcdFuelDoorOpen.SetActive(false);
-        lcdFuelDoorClosed.SetActive(false);
-        lcdFuelHinge.SetActive(false);
+        lcdFuelTank.SetActive(active);
+        lcdFuelDoorOpen.SetActive(active);
+        lcdFuelDoorClosed.SetActive(active);
+        lcdFuelHinge.SetActive(active);
         foreach (GameObject lcdObject in lcdFuelTankGauge)
-            lcdObject.SetActive(false);
+            lcdObject.SetActive(active);
 
         //clear buttons
         foreach (GameObject lcdObject in lcdFuelButton)
-            lcdObject.SetActive(false);
+            lcdObject.SetActive(active);
         foreach (GameObject lcdObject in lcdDoorButton)
-            lcdObject.SetActive(false);
+            lcdObject.SetActive(active);
 
         //Clear dummy gate and arrow
-        lcdDummyGate.SetActive(false);
-        lcdArrow.SetActive(false);
-        lcdLeavingGate.SetActive(false);
+        lcdDummyGate.SetActive(active);
+        lcdArrow.SetActive(active);
+        lcdLeavingGate.SetActive(active);
     }
 
     public void SpawnGate()
@@ -132,7 +132,7 @@ public class Gate : MonoBehaviour
             //Otherwise, advance
             else
             {
-                Debug.Log("Gate moving");
+                //Debug.Log("Gate moving");
                 gateState++;
                 if (gateState > 4)
                     gateState = 0;
@@ -148,7 +148,7 @@ public class Gate : MonoBehaviour
         {
             case 0:
                 //No gate spawned. Do nothing
-                ClearGate();
+                ClearGate(false);
                 gateSpawned = false;
                 break;
             case 1:
@@ -157,19 +157,19 @@ public class Gate : MonoBehaviour
                 break;
             case 2:
                 //Gate close by. Activate the dummy gate
-                ClearGate();
+                ClearGate(false);
                 lcdDummyGate.SetActive(true);
                 break;
             case 3:
                 //Gate blocking
-                ClearGate();
+                ClearGate(false);
                 lcdDummyGate.SetActive(false);
                 ActivateBlockingGate();
                 break;
             case 4:
                 //Gate leaving
                 //Update LCDs
-                ClearGate();
+                ClearGate(false);
                 lcdLeavingGate.SetActive(true);
                 //Hit the sails if they're up
                 if (GameManager.instance.sailsUp)

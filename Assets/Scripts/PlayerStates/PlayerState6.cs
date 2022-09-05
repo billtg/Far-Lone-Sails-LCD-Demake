@@ -42,7 +42,7 @@ public class PlayerState6 : PlayerBaseState
             //Start pushing the button if it wasn't started
             if (!gm.pushingButton1)
             {
-                Debug.Log("Started pushing button");
+                //Debug.Log("Started pushing button");
                 gm.pushingButton1 = true;
                 startedPushing = Time.time;
                 //Start the button audio here
@@ -56,7 +56,7 @@ public class PlayerState6 : PlayerBaseState
                     gm.HitGate();
                     return;
                 }
-                Debug.Log("Button Pushed");
+                //Debug.Log("Button Pushed");
                 gm.SetButton1State(gm.button1State + 1);
                 if (gm.button1State == 3)
                 {

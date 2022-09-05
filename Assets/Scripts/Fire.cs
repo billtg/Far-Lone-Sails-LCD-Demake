@@ -32,14 +32,14 @@ public class Fire : MonoBehaviour
         sailsFireAnimationTimeSet = Time.time;
     }
 
-    public void ClearFireLCDs()
+    public void ClearFireLCDs(bool active)
     {
         foreach (GameObject fireObject in lcdFuelFire)
-            fireObject.SetActive(false);
+            fireObject.SetActive(active);
         foreach (GameObject fireObject in lcdMotorFire)
-            fireObject.SetActive(false);
+            fireObject.SetActive(active);
         foreach (GameObject fireObject in lcdSailsFire)
-            fireObject.SetActive(false);
+            fireObject.SetActive(active);
     }
 
     public void CatchFire(HealthBar onFire)
@@ -66,6 +66,8 @@ public class Fire : MonoBehaviour
                 timeSinceDamageSails = Time.time;
                 break;
         }
+        //Play the fire alarm
+        AudioManager.instance.FireAlarm();
     }
 
     public void DouseFire(HealthBar dousedFire)
@@ -82,7 +84,7 @@ public class Fire : MonoBehaviour
                 sailsOnFire = false;
                 break;
         }
-        ClearFireLCDs();
+        ClearFireLCDs(false);
     }
 
 

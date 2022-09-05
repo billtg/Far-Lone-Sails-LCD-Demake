@@ -11,10 +11,10 @@ public class Lives : MonoBehaviour
     {
         instance = this;
     }
-    public void ClearLivesLCDs()
+    public void ClearLivesLCDs(bool active)
     {
         foreach (GameObject lcdObject in lcdLives)
-            lcdObject.SetActive(false);
+            lcdObject.SetActive(active);
     }
 
     public void UpdateLives(int lives)

@@ -19,7 +19,6 @@ public class PlayerState39 : PlayerBaseState
     }
     public override void Fall(GameManager gm)
     {
-        Debug.Log("Falling");
         gm.ChangePlayerState(gm.ps35);
     }
     public override void PlayerUpdate(GameManager gm)

@@ -32,20 +32,20 @@ public class Beacon : MonoBehaviour
         instance = this;
     }
 
-    public void ClearBeaconLCDs()
+    public void ClearBeaconLCDs(bool active)
     {
-        lcdTower.SetActive(false);
-        lcdBeacon.SetActive(false);
-        lcdBeaconHinge.SetActive(false);
-        lcdBeaconFuel.SetActive(false);
-        lcdBeaconDoorOpen.SetActive(false);
+        lcdTower.SetActive(active);
+        lcdBeacon.SetActive(active);
+        lcdBeaconHinge.SetActive(active);
+        lcdBeaconFuel.SetActive(active);
+        lcdBeaconDoorOpen.SetActive(active);
 
         foreach (GameObject beaconObject in lcdBeaconFire)
-            beaconObject.SetActive(false);
+            beaconObject.SetActive(active);
         foreach (GameObject beaconObject in lcdBeaconSmoke)
-            beaconObject.SetActive(false);
+            beaconObject.SetActive(active);
         foreach (GameObject beaconObject in lcdBeaconButton)
-            beaconObject.SetActive(false);
+            beaconObject.SetActive(active);
     }
 
     public void ActivateBeaconLCDs()

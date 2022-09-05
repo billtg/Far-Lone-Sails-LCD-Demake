@@ -7,49 +7,115 @@ public class AudioManager : MonoBehaviour
     public static AudioManager instance;
     public AudioSource audioSource;
 
+    [Header("Audio Priority")]
+    public int currentClipPriority;
+
     public AudioClip playerMove;
+    public int playerMovePriority;
     public AudioClip vehicleTick;
+    public int vehicleTickPriority;
     public AudioClip pickupBox;
+    public int pickupBoxPriority;
     public AudioClip dropBox;
+    public int dropBoxPriority;
     public AudioClip sailsUp;
+    public int sailsUpPriority;
     public AudioClip fireAlarm;
+    public int fireAlarmPriority;
+    public AudioClip brakeApplied;
+    public int brakeAppliedPriority;
+
+    public AudioClip fuelLoad;
+    public int fuelLoadPriority;
+    public AudioClip fireHose;
+    public int fireHosePriority;
+    public AudioClip steamWhistle;
+    public int steamWhistlePriority;
 
     private void Awake()
     {
         instance = this;
         audioSource = GetComponent<AudioSource>();
     }
+
+    void PlayWithPriority(int priority, AudioClip audioClip, bool loop)
+    {
+        //Play if nothing else is playing, otherwise play the highest priority
+        if (!audioSource.isPlaying)
+        {
+            audioSource.clip = audioClip;
+            audioSource.Play();
+            currentClipPriority = priority;
+            audioSource.loop = loop;
+        }
+        else
+        {
+            if (priority <= currentClipPriority)
+            {
+                //New clip is higher/equal priority
+                audioSource.clip = audioClip;
+                audioSource.Play();
+                currentClipPriority = priority;
+                audioSource.loop = loop;
+            }
+            else
+            {
+                //Debug.Log("Lower priority clip not played");
+                return;
+            }
+        }
+
+    }
     public void PlayerMove()
     {
-        audioSource.clip = playerMove;
-        audioSource.Play();
+        PlayWithPriority(playerMovePriority, playerMove, false);
     }
 
     public void VehicleTick()
     {
-        audioSource.clip = vehicleTick;
-        audioSource.Play();
+        PlayWithPriority(vehicleTickPriority, vehicleTick, false);
     }
 
     public void PickupBox()
     {
-        audioSource.clip = pickupBox;
-        audioSource.Play();
+        PlayWithPriority(pickupBoxPriority, pickupBox, false);
     }
 
     public void DropBox()
     {
-        audioSource.clip = dropBox;
-        audioSource.Play();
+        PlayWithPriority(dropBoxPriority, dropBox, false);
     }
     public void SailsUp()
     {
-        audioSource.clip = sailsUp;
-        audioSource.Play();
+        PlayWithPriority(sailsUpPriority, sailsUp, false);
     }
     public void FireAlarm()
     {
-        audioSource.clip = fireAlarm;
-        audioSource.Play();
+        PlayWithPriority(fireAlarmPriority, fireAlarm, false);
     }
+    public void BrakeApplied()
+    {
+        PlayWithPriority(brakeAppliedPriority, brakeApplied, false);
+    } 
+    public void FuelLoad()
+    {
+        PlayWithPriority(fuelLoadPriority, fuelLoad, false);
+    }
+    public void FireHose()
+    {
+        PlayWithPriority(fireHosePriority, fireHose, true);
+    }
+    public void StopHosing()
+    {
+        Debug.Log("Stop Audio Hosing");
+        audioSource.loop = false;
+        //Play Fire out sound instead
+        if (audioSource.clip == fireHose)
+            audioSource.Stop();
+    }
+    public void SteamWhistle()
+    {
+        PlayWithPriority(steamWhistlePriority, steamWhistle, false);
+    }
+    
 }

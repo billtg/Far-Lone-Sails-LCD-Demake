@@ -15,7 +15,7 @@ public class Sails : MonoBehaviour
 
     public void SetSails(int state)
     {
-        ClearSails();
+        ClearSails(false);
         switch (state)
         {
             case 0:
@@ -48,11 +48,11 @@ public class Sails : MonoBehaviour
         }
     }
 
-    public void ClearSails()
+    public void ClearSails(bool active)
     {
         foreach (GameObject sailObject in lcdSails)
-            sailObject.SetActive(false);
+            sailObject.SetActive(active);
         foreach (GameObject buttonObject in lcdButton5)
-            buttonObject.SetActive(false);
+            buttonObject.SetActive(active);
     }
 }

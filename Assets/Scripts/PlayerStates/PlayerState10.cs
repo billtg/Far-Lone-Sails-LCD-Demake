@@ -14,24 +14,11 @@ public class PlayerState10 : PlayerBaseState
         //push the button
         gm.SetButton2(true);
     }
-    public override void MoveLeft(GameManager gm)
-    {
-    }
-    public override void MoveRight(GameManager gm)
-    {
-    }
-    public override void Jump(GameManager gm)
-    {
-        Debug.Log("Won't Work");
-        //Debug.Log("Jumping");
-        //gm.ChangePlayerState(gm.ps1);
-    }
     public override void Grab(GameManager gm)
     {
     }
     public override void Fall(GameManager gm)
     {
-        Debug.Log("Falling");
         gm.ChangePlayerState(gm.ps8);
     }
     public override void PlayerUpdate(GameManager gm)

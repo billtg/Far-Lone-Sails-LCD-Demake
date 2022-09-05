@@ -14,7 +14,7 @@ public class FrontFlap : MonoBehaviour
 
     public void UpdateFrontFlap(int speed)
     {
-        ClearFrontFlap();
+        ClearFrontFlap(false);
         lcdHinge.SetActive(true);
         if (speed == 0)
             lcdFlaps[1].SetActive(true);
@@ -22,11 +22,11 @@ public class FrontFlap : MonoBehaviour
             lcdFlaps[0].SetActive(true);
     }
 
-    public void ClearFrontFlap()
+    public void ClearFrontFlap(bool active)
     {
-        lcdFlaps[0].SetActive(false);
-        lcdFlaps[1].SetActive(false);
-        lcdHinge.SetActive(false);
+        lcdFlaps[0].SetActive(active);
+        lcdFlaps[1].SetActive(active);
+        lcdHinge.SetActive(active);
 
     }
 }

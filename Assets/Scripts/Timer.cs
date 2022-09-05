@@ -31,7 +31,7 @@ public class Timer : MonoBehaviour
 
     public void StartTimer()
     {
-        Debug.Log("Timer Started");
+        //Debug.Log("Timer Started");
         timerStartTime = Time.time;
         timerRunning = true;
     }
@@ -48,19 +48,19 @@ public class Timer : MonoBehaviour
         lcdColon[0].SetActive(true);
         lcdColon[1].SetActive(true);
     }
-    public void ClearTimerLCDs()
+    public void ClearTimerLCDs(bool active)
     {
         foreach (GameObject lcdObject in lcdDigits0seconds)
-            lcdObject.SetActive(false);
+            lcdObject.SetActive(active);
         foreach (GameObject lcdObject in lcdDigits10seconds)
-            lcdObject.SetActive(false);
+            lcdObject.SetActive(active);
         foreach (GameObject lcdObject in lcdDigits0minutes)
-            lcdObject.SetActive(false);
+            lcdObject.SetActive(active);
         foreach (GameObject lcdObject in lcdDigits0tenths)
-            lcdObject.SetActive(false);
+            lcdObject.SetActive(active);
         foreach (GameObject lcdObject in lcdColon)
-            lcdObject.SetActive(false);
-        lcdDecimal.SetActive(false);
+            lcdObject.SetActive(active);
+        lcdDecimal.SetActive(active);
     }
 
     public void UpdateTimer()

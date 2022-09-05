@@ -63,9 +63,9 @@ public class FuelGauge : MonoBehaviour
         }
     }
 
-    public void ClearFuelGauge()
+    public void ClearFuelGauge(bool active)
     {
         foreach (GameObject fuelGaugeObject in lcdFuelGauge)
-            fuelGaugeObject.SetActive(false);
+            fuelGaugeObject.SetActive(active);
     }
 }
