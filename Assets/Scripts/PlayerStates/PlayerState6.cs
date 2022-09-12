@@ -46,6 +46,7 @@ public class PlayerState6 : PlayerBaseState
                 gm.pushingButton1 = true;
                 startedPushing = Time.time;
                 //Start the button audio here
+                    AudioManager.instance.ButtonPushing1();
             }
 
             if (Time.time - startedPushing > gm.button1PushingTime*Health.instance.motorDelayFactor)
@@ -58,12 +59,7 @@ public class PlayerState6 : PlayerBaseState
                 }
                 //Debug.Log("Button Pushed");
                 gm.SetButton1State(gm.button1State + 1);
-                if (gm.button1State == 3)
-                {
-                    //Button fully pushed. Time to let go.
-                    //MoveLeft(GameManager.instance);
-                }
-                else
+                if (gm.button1State != 3)
                 {
                     //Button not fully pushed. Reset pushing time
                     startedPushing = Time.time;
@@ -73,6 +69,7 @@ public class PlayerState6 : PlayerBaseState
         else
         {
             gm.pushingButton1 = false;
+            AudioManager.instance.StopButtonPushing();
         }
     }
 }

@@ -16,6 +16,11 @@ public class Timer : MonoBehaviour
     public float timeInSeconds;
     public bool timerRunning;
 
+    bool blinkTimer = false;
+    float lastTimerFlash;
+    public float timerFlashTime;
+    bool timerOn = true;
+
     private void Awake()
     {
         instance = this;
@@ -23,10 +28,34 @@ public class Timer : MonoBehaviour
 
     private void Update()
     {
+        if (blinkTimer) AnimateTimer();
         if (!timerRunning) return;
 
         timeInSeconds = Time.time - timerStartTime;
         UpdateTimer();
+    }
+
+    void AnimateTimer()
+    {
+        if (Time.time - lastTimerFlash > timerFlashTime)
+        {
+            //Turn timer on or off
+            if (timerOn)
+            {
+                //turn it off
+                ClearTimerLCDs(false);
+                lastTimerFlash = Time.time-.1f;
+                timerOn = false;
+            }
+            else
+            {
+                //turn it on
+                UpdateTimer();
+                ActivateDots();
+                lastTimerFlash = Time.time;
+                timerOn = true;
+            }
+        }
     }
 
     public void StartTimer()
@@ -40,6 +69,9 @@ public class Timer : MonoBehaviour
     {
         timerRunning = false;
         UpdateTimer();
+        //Make it blink.
+        blinkTimer = true;
+        lastTimerFlash = Time.time;
     }
 
     public void ActivateDots()

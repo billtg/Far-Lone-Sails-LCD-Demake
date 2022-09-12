@@ -70,6 +70,13 @@ public class Fire : MonoBehaviour
         AudioManager.instance.FireAlarm();
     }
 
+    public void ResetFires()
+    {
+        fuelOnFire = false;
+        motorOnFire = false;
+        sailsOnFire = false;
+    }
+
     public void DouseFire(HealthBar dousedFire)
     {
         switch (dousedFire)
@@ -85,6 +92,7 @@ public class Fire : MonoBehaviour
                 break;
         }
         ClearFireLCDs(false);
+        AudioManager.instance.FiresOut();
     }
 
 

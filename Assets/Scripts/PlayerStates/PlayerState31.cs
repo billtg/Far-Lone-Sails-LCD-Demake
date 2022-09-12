@@ -34,6 +34,8 @@ public class PlayerState31 : PlayerBaseState
                 Debug.Log("Started pushing button 5");
                 pushingButton5 = true;
                 startedPushing = Time.time;
+                //Start the button audio
+                AudioManager.instance.ButtonPushing1();
                 if (!gm.sailsUp && Health.instance.sailHealth > 0)
                     Sails.instance.SetSails(1);
             }
@@ -42,6 +44,7 @@ public class PlayerState31 : PlayerBaseState
                 Debug.Log("Button 5 Pushed");
                 gm.ChangeSail();
                 pushingButton5 = false;
+                AudioManager.instance.StopButtonPushing();
                 if (!gm.sailsUp)
                     Sails.instance.SetSails(0);
             }
@@ -51,6 +54,7 @@ public class PlayerState31 : PlayerBaseState
             if (pushingButton5)
             {
                 pushingButton5 = false;
+                AudioManager.instance.StopButtonPushing();
                 if (!gm.sailsUp)
                     Sails.instance.SetSails(0);
             }

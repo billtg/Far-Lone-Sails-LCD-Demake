@@ -205,12 +205,14 @@ public class FireHose : MonoBehaviour
         timeStartedWelding = Time.time;
         lastFuelDrain = Time.time;
         this.weldTarget = weldTarget;
+        AudioManager.instance.Welding();
     }
 
     public void StopWelding()
     {
         welding = false;
         ClearWeldingLCDs();
+        AudioManager.instance.StopWelding();
     }
 
     private void Update()

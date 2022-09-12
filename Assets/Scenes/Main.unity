@@ -13839,6 +13839,7 @@ MonoBehaviour:
   - {fileID: 1310825022}
   - {fileID: 1653000129}
   - {fileID: 1519892197}
+  gameOver: 0
   lives: 3
   gameOverDelay: 3
   playerHangTime: 0.25
@@ -32184,6 +32185,7 @@ MonoBehaviour:
   lcdDecimal: {fileID: 179903764}
   timeInSeconds: 0
   timerRunning: 0
+  timerFlashTime: 0.3
 --- !u!1 &1669911675
 GameObject:
   m_ObjectHideFlags: 0
@@ -34780,7 +34782,7 @@ MonoBehaviour:
   - {fileID: 1539162134}
   - {fileID: 2134711975}
   fireAnimationDelay: 0.15
-  smokeDelay: 5
+  smokeDelay: 13
   buttonDelay: 3
 --- !u!1 &1772485865
 GameObject:
@@ -36319,9 +36321,9 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   currentClipPriority: 0
   playerMove: {fileID: 8300000, guid: c97ccda6b7b10024d9d55e8843173c94, type: 3}
-  playerMovePriority: 3
+  playerMovePriority: 4
   vehicleTick: {fileID: 8300000, guid: 88488f6d6069b064a86b1a0e4f92c0f2, type: 3}
-  vehicleTickPriority: 3
+  vehicleTickPriority: 4
   pickupBox: {fileID: 8300000, guid: 3462827e1c338e04485b3e56fe51ff5e, type: 3}
   pickupBoxPriority: 2
   dropBox: {fileID: 8300000, guid: c97ccda6b7b10024d9d55e8843173c94, type: 3}
@@ -36334,10 +36336,26 @@ MonoBehaviour:
   brakeAppliedPriority: 2
   fuelLoad: {fileID: 8300000, guid: 08d0645850d04034baa62887718c448f, type: 3}
   fuelLoadPriority: 2
+  gateFuelLoad: {fileID: 8300000, guid: 5b7f92033907862468fb82a7fd9705de, type: 3}
+  gateFuelLoadPriority: 2
+  gateOpen: {fileID: 8300000, guid: 0d3eb5aef2930c045b9d6e3748c10829, type: 3}
+  gateOpenPriority: 2
   fireHose: {fileID: 8300000, guid: 15a477227b0eb014cb66bcc091ce6508, type: 3}
   fireHosePriority: 2
+  firesOut: {fileID: 8300000, guid: 940c351f4f75c2141a571eb423f307ec, type: 3}
+  firesOutPriority: 1
+  welding: {fileID: 8300000, guid: 62eb67e819204134c9884f9cb5cc2d74, type: 3}
+  weldingPriority: 2
   steamWhistle: {fileID: 8300000, guid: e3d261842427e094d951c61100884a06, type: 3}
   steamWhistlePriority: 2
+  buttonPushing1: {fileID: 8300000, guid: 0a8740ee3edfa2e4b888dd70944a51f3, type: 3}
+  buttonPushing2: {fileID: 8300000, guid: 1012712eab8c5f045aa7272842c9ef3e, type: 3}
+  buttonPushingPriority: 3
+  death: {fileID: 8300000, guid: e08a9d714977be54dadce958808fa68c, type: 3}
+  deathPriority: 1
+  gameOver: {fileID: 8300000, guid: 73c79e7907a488e4aaaa7e71feefe788, type: 3}
+  gameOverPriority: 1
+  finale: {fileID: 8300000, guid: 26bc9524ef1e2fd4eb5a69feff997d5e, type: 3}
 --- !u!1 &1830678660
 GameObject:
   m_ObjectHideFlags: 0

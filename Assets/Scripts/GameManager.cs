@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         gameOver = true;
-        ClearScreen();
+        TurnOnEveryLCD();
         StartCoroutine(BootSequence());
         //gameOver = false;
         //StartGame();
@@ -157,10 +157,10 @@ public class GameManager : MonoBehaviour
 
     IEnumerator BootSequence()
     {
-        yield return new WaitForSeconds(1);
-        //Turn on all displays
-        TurnOnEveryLCD();
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
+        //Turn Off all displays
+        ClearScreen();
+        yield return new WaitForSeconds(1.5f);
         gameOver = false;
         StartGame();
     }
@@ -247,10 +247,7 @@ public class GameManager : MonoBehaviour
         motorSpeed = 0;
         sailSpeed = 0;
         UpdateSpeed();
-        Fire.instance.DouseFire(HealthBar.fuel);
-        Fire.instance.DouseFire(HealthBar.motor);
-        Fire.instance.DouseFire(HealthBar.sails);
-
+        Fire.instance.ResetFires();
     }
 
     // Update is called once per frame
@@ -453,6 +450,8 @@ public class GameManager : MonoBehaviour
                 button1StateTime = 10;
                 //Set the Speed. Later this will combine with wind/sail
                 motorSpeed = 2;
+                //Stop the Audio
+                AudioManager.instance.StopButtonPushing();
                 break;
             default:
                 Debug.LogError("Invalid state sent to Button1");
@@ -825,6 +824,7 @@ public class GameManager : MonoBehaviour
         else
         {
             Lives.instance.UpdateLives(lives);
+            AudioManager.instance.Death();
             //Respawn the player, but don't reset the odometer
             StartCoroutine(DeathDelay());
         }
@@ -841,7 +841,7 @@ public class GameManager : MonoBehaviour
     void GameOver()
     {
         gameOver = true;
-        gameOverAudio.Play();
+        AudioManager.instance.GameOver();
 
         //Restart after a delay
         StartCoroutine(DelayedRestart());
@@ -970,6 +970,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("You win");
         lcdGroundBoxes[49].SetActive(false);
         //Play music
+        AudioManager.instance.Finale();
         //Show time
         Timer.instance.StopTimer();
         //Set the flag to backwards

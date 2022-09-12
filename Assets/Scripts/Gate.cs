@@ -242,6 +242,8 @@ public class Gate : MonoBehaviour
         lcdDoorButton[0].SetActive(true);
         lcdDoorButton[1].SetActive(true);
         lcdDoorButton[2].SetActive(false);
+        //Play the audio
+        AudioManager.instance.GateFuelLoad();
     }
 
     public void PressDoorButton()
@@ -258,6 +260,8 @@ public class Gate : MonoBehaviour
         //Break the ladder
         lcdLadder1.SetActive(false);
         ladderDown = false;
+        //Play the gate opening audio
+        AudioManager.instance.GateOpen();
     }
 
     private void Update()
@@ -333,6 +337,7 @@ public class Gate : MonoBehaviour
             lcdDoors[i-1].SetActive(false);
             yield return new WaitForSeconds(doorOpenDelay);
         }
+        AudioManager.instance.StopGateOpen();
         yield return new WaitForSeconds(2);
         gateOpen = true;
         GameManager.instance.GateOpen();

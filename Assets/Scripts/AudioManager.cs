@@ -27,10 +27,29 @@ public class AudioManager : MonoBehaviour
 
     public AudioClip fuelLoad;
     public int fuelLoadPriority;
+    public AudioClip gateFuelLoad;
+    public int gateFuelLoadPriority;
+    public AudioClip gateOpen;
+    public int gateOpenPriority;
     public AudioClip fireHose;
     public int fireHosePriority;
+    public AudioClip firesOut;
+    public int firesOutPriority;
+    public AudioClip welding;
+    public int weldingPriority;
     public AudioClip steamWhistle;
     public int steamWhistlePriority;
+
+    public AudioClip buttonPushing1;
+    public AudioClip buttonPushing2;
+    public int buttonPushingPriority;
+
+    public AudioClip death;
+    public int deathPriority;
+    public AudioClip gameOver;
+    public int gameOverPriority;
+
+    public AudioClip finale;
 
     private void Awake()
     {
@@ -113,9 +132,45 @@ public class AudioManager : MonoBehaviour
         if (audioSource.clip == fireHose)
             audioSource.Stop();
     }
+
+    public void FiresOut()
+    {
+        PlayWithPriority(firesOutPriority, firesOut, false);
+    }
     public void SteamWhistle()
     {
         PlayWithPriority(steamWhistlePriority, steamWhistle, false);
     }
+
+    public void ButtonPushing1() { PlayWithPriority(buttonPushingPriority, buttonPushing1, true); }
+
+    public void ButtonPushing2() { PlayWithPriority(buttonPushingPriority, buttonPushing2, true); }
+
+    public void StopButtonPushing()
+    {
+        Debug.Log("Stopping Button Audio");
+        audioSource.loop = false;
+        if (audioSource.clip == buttonPushing1 || audioSource.clip == buttonPushing2)
+            audioSource.Stop();
+    }
+
+    public void Death() { PlayWithPriority(deathPriority, death, false); }
+    public void GameOver() { PlayWithPriority(gameOverPriority, gameOver, false); }
+    public void GateFuelLoad() { PlayWithPriority(gateFuelLoadPriority, gateFuelLoad, false); }
+    public void GateOpen() { PlayWithPriority(gateOpenPriority, gateOpen, true); }
+    public void StopGateOpen()
+    {
+        audioSource.loop = false;
+        if (audioSource.clip == gateOpen)
+            audioSource.Stop();
+    }
+    public void Welding() { PlayWithPriority(weldingPriority, welding, true); }
+    public void StopWelding()
+    {
+        audioSource.loop = false;
+        if (audioSource.clip == welding)
+            audioSource.Stop();
+    }
     
+    public void Finale() { PlayWithPriority(0, finale, false); }
 }
