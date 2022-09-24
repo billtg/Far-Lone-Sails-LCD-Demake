@@ -21,6 +21,7 @@ public class PlayerState31 : PlayerBaseState
     public override void Jump(GameManager gm)
     {
         gm.ChangePlayerState(gm.ps32);
+        AudioManager.instance.StopButtonPushing();
     }
 
     public override void PlayerUpdate(GameManager gm)

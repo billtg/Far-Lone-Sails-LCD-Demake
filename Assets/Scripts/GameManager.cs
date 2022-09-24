@@ -385,6 +385,10 @@ public class GameManager : MonoBehaviour
             currentPlayerState.Grab(this);
         if (keyboard.rKey.wasPressedThisFrame)
             SceneManager.LoadScene(0);
+        if (keyboard.mKey.wasPressedThisFrame)
+            AudioManager.instance.Mute();
+        if (Application.platform != RuntimePlatform.WebGLPlayer && keyboard.escapeKey.wasPressedThisFrame)
+            Application.Quit();
     }
 
     public void ChangePlayerState(PlayerBaseState state)

@@ -220,7 +220,7 @@ public class FireHose : MonoBehaviour
         //Flash the welder/nozzle if they're needed and not held.
         if ((Fire.instance.fuelOnFire || Fire.instance.motorOnFire || Fire.instance.sailsOnFire) && !GameManager.instance.playerHoldingNozzle)
             FlashNozzle();
-        if (!Health.instance.AtFullHealth() && !GameManager.instance.playerHoldingWelder)
+        if (!Health.instance.AtFullHealth() && !GameManager.instance.playerHoldingWelder && !(Fire.instance.fuelOnFire || Fire.instance.motorOnFire || Fire.instance.sailsOnFire))
             FlashWelder();
 
         //Only update if actively hosing

@@ -57,6 +57,11 @@ public class AudioManager : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
+    public void Mute()
+    {
+        audioSource.mute = !audioSource.mute;
+    }
+
     void PlayWithPriority(int priority, AudioClip audioClip, bool loop)
     {
         //Play if nothing else is playing, otherwise play the highest priority
